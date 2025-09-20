@@ -10,7 +10,7 @@ import { AuthModule } from '../auth/auth.module';
     MongooseModule.forFeature([
       { name: Settings.name, schema: SettingsSchema },
     ]),
-    AuthModule, // Para JwtAuthGuard
+    AuthModule,
   ],
   controllers: [SettingsController],
   providers: [SettingsService],

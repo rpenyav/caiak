@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Settings } from './settings.schema';
-import { CreateSettingsDto } from './dto/create-settings.dto';
+import { SettingsDto } from './dto/settings.dto';
 
 @Injectable()
 export class SettingsService {
@@ -12,29 +12,45 @@ export class SettingsService {
 
   async createOrUpdate(
     userId: string,
-    createSettingsDto: CreateSettingsDto,
+    settingsDto: SettingsDto,
   ): Promise<Settings> {
     const existingSettings = await this.settingsModel
       .findOne({ userId })
       .exec();
 
     if (existingSettings) {
-      // Actualizar configuraciones existentes
-      return this.settingsModel
-        .findOneAndUpdate(
-          { userId },
-          { $set: createSettingsDto },
-          { new: true },
-        )
+      const updatedSettings = await this.settingsModel
+        .findOneAndUpdate({ userId }, { $set: settingsDto }, { new: true })
         .exec();
+
+      if (!updatedSettings) {
+        throw new NotFoundException(
+          `Configuraciones para el usuario "${userId}" no encontradas`,
+        );
+      }
+
+      return updatedSettings;
     }
 
-    // Crear nuevas configuraciones
     const settings = new this.settingsModel({
       userId,
-      ...createSettingsDto,
+      ...settingsDto,
     });
     return settings.save();
+  }
+
+  async update(userId: string, settingsDto: SettingsDto): Promise<Settings> {
+    const updatedSettings = await this.settingsModel
+      .findOneAndUpdate({ userId }, { $set: settingsDto }, { new: true })
+      .exec();
+
+    if (!updatedSettings) {
+      throw new NotFoundException(
+        `Configuraciones para el usuario "${userId}" no encontradas`,
+      );
+    }
+
+    return updatedSettings;
   }
 
   async findByUserId(userId: string): Promise<Settings> {

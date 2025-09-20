@@ -6,7 +6,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 
-export class CreateSettingsDto {
+export class SettingsDto {
   @IsString()
   @IsEnum(['dark', 'light'])
   @IsOptional()
