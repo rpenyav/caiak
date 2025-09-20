@@ -1,60 +1,42 @@
 import {
   Controller,
   Post,
-  Body,
   Get,
-  Query,
+  Body,
   Param,
-  BadRequestException,
-  NotFoundException,
+  Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthAndLogGuard } from '../common/guards/auth-and-log.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('register')
-  @UseGuards(JwtAuthGuard) // Proteger registro
-  async register(@Body() createUserDto: CreateUserDto) {
-    try {
-      return await this.usersService.create(createUserDto);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto) {
-    try {
-      return await this.usersService.login(loginUserDto);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return this.usersService.login(loginUserDto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard) // Proteger listado
+  @UseGuards(AuthAndLogGuard)
   async findAll(@Query() query: GetUsersQueryDto) {
-    try {
-      return await this.usersService.findAll(query);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard) // Proteger búsqueda por ID
+  @UseGuards(AuthAndLogGuard)
   async findById(@Param('id') id: string) {
-    try {
-      return await this.usersService.findById(id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
+    return this.usersService.findById(id);
   }
 }

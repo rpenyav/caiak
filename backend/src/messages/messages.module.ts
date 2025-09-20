@@ -8,7 +8,8 @@ import { AuthModule } from '../auth/auth.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { AppConfigModule } from '../config/app-config.module';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
-import { FileUploadModule } from 'src/file-upload/file-upload.module';
+import { FileUploadModule } from '../file-upload/file-upload.module';
+import { LogsModule } from '../logs/logs.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FileUploadModule } from 'src/file-upload/file-upload.module';
     AppConfigModule,
     WorkspacesModule,
     FileUploadModule,
+    LogsModule, // Añadido para proporcionar LogsService
   ],
   controllers: [MessagesController],
   providers: [MessagesService],

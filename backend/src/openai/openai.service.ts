@@ -1,20 +1,23 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import * as fs from 'fs';
-import * as path from 'path';
 import { Observable } from 'rxjs';
+import { PromptsService } from '../prompts/prompts.service';
 
 @Injectable()
 export class OpenaiService implements OnModuleInit {
   private openai: OpenAI;
-  private systemPrompt: string;
+  private systemPrompt: string = 'prompt de pruebas'; // Prompt por defecto hardcoded
+
   private readonly model: string;
   private readonly maxTokens: number;
   private readonly cps: number;
   private readonly tick: number;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private promptsService: PromptsService,
+  ) {
     this.model =
       this.configService.get<string>('OPENAI_MODEL') || 'gpt-4o-mini';
     this.maxTokens = parseInt(
@@ -44,24 +47,16 @@ export class OpenaiService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    const promptUrl = this.configService.get<string>(
-      'CHATBOT_SYSTEM_PROMPT_URL',
-    );
-    if (!promptUrl) {
-      throw new Error('CHATBOT_SYSTEM_PROMPT_URL no está configurada en .env');
-    }
-
-    const fullPath = path.join(
-      process.cwd(),
-      'src',
-      promptUrl.replace(/^\//, ''),
-    );
     try {
-      this.systemPrompt = fs.readFileSync(fullPath, 'utf8').trim();
+      const promptDoc = await this.promptsService.findFirstPrompt();
+      this.systemPrompt = promptDoc.prompt;
+      console.log(
+        `Usando prompt de la base de datos: "${this.systemPrompt}" (appId: "${promptDoc.appId}")`,
+      );
     } catch (error) {
-      console.error(`Error leyendo el archivo de prompt ${fullPath}:`, error);
-      this.systemPrompt =
-        'Eres un asistente útil para PYMEs. Puedes analizar imágenes desde URLs.';
+      console.warn(
+        `No se encontraron prompts en la base de datos, usando prompt por defecto: "${this.systemPrompt}"`,
+      );
     }
   }
 

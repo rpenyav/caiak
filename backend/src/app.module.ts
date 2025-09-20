@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
@@ -13,10 +13,12 @@ import { AuthModule } from './auth/auth.module';
 import { AppConfigModule } from './config/app-config.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { SettingsModule } from './settings/settings.module';
+import { PromptsModule } from './prompts/prompts.module';
+import { LogsModule } from './logs/logs.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -33,8 +35,14 @@ import { SettingsModule } from './settings/settings.module';
     AuthModule,
     FileUploadModule,
     SettingsModule,
+    PromptsModule,
+    LogsModule,
   ],
   controllers: [AppController, OpenaiController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // No aplicamos LoggerMiddleware globalmente
+  }
+}

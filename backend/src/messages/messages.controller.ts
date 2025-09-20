@@ -11,12 +11,12 @@ import {
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthAndLogGuard } from '../common/guards/auth-and-log.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Observable, map, concatMap, tap, from } from 'rxjs';
 
 @Controller('messages')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthAndLogGuard)
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 

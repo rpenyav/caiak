@@ -56,11 +56,30 @@ export class UsersService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // Generar token JWT
-    const payload = { email: user.email, sub: user._id, roles: user.roles };
+    // Generar token JWT con appId
+    const payload = {
+      email: user.email,
+      sub: user._id,
+      roles: user.roles,
+      appId: 'caiak-app-1', // Añadir appId al payload
+    };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
+  }
+
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    return user;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -97,7 +116,7 @@ export class UsersService {
     // Obtener la lista paginada, excluyendo password
     const list = await this.userModel
       .find()
-      .select('-password') // Excluir el campo password
+      .select('-password')
       .skip(skip)
       .limit(pageSize)
       .sort(sort)

@@ -12,6 +12,7 @@ import { AppConfigService } from '../config/app-config.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Observable, from } from 'rxjs';
 import OpenAI from 'openai';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class MessagesService {
@@ -20,6 +21,7 @@ export class MessagesService {
     private readonly conversationsService: ConversationsService,
     private readonly openaiService: OpenaiService,
     private readonly appConfigService: AppConfigService,
+    private readonly logsService: LogsService,
   ) {}
 
   async createHumanMessage(req: any, createMessageDto: CreateMessageDto) {
@@ -53,9 +55,27 @@ export class MessagesService {
       sender: 'human',
       type: createMessageDto.type || 'text',
       createdAt: new Date(),
-      fileUrls: createMessageDto.fileUrls, // Guardar array de URLs
+      fileUrls: createMessageDto.fileUrls,
     });
-    return message.save();
+    const savedMessage = await message.save();
+
+    // Loguear interacción humana
+    await this.logsService.createLog(
+      'interaction',
+      userId,
+      'caiak-app-1', // Ajusta según tu appId
+      req.ip,
+      req.get('user-agent') || '',
+      {
+        conversationId: createMessageDto.conversationId,
+        messageType: createMessageDto.type,
+        content: createMessageDto.content,
+        fileUrls: createMessageDto.fileUrls,
+      },
+      'info',
+    );
+
+    return savedMessage;
   }
 
   generateBotResponse(conversationId: string): Promise<Observable<string>> {
@@ -126,7 +146,24 @@ export class MessagesService {
       type: 'text',
       createdAt: new Date(),
     });
-    return message.save();
+    const savedMessage = await message.save();
+
+    // Loguear interacción del bot
+    await this.logsService.createLog(
+      'interaction',
+      userId,
+      'caiak-app-1', // Ajusta según tu appId
+      'bot-ip', // IP del bot no aplica, usa un valor dummy
+      'bot-agent', // User agent del bot no aplica, usa un valor dummy
+      {
+        conversationId,
+        messageType: 'text',
+        content,
+      },
+      'info',
+    );
+
+    return savedMessage;
   }
 
   async getMessagesByConversation(conversationId: string, user: any) {

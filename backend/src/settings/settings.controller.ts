@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { SettingsDto } from './dto/settings.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthAndLogGuard } from '../common/guards/auth-and-log.guard';
 
 @Controller('settings')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthAndLogGuard)
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
