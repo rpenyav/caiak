@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConversationsService } from './conversations.service';
 import { ConversationsController } from './conversations.controller';
 import { Conversation, ConversationSchema } from './conversations.schema';
+import { AuthModule } from '../auth/auth.module';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
 
 @Module({
@@ -10,15 +11,11 @@ import { WorkspacesModule } from '../workspaces/workspaces.module';
     MongooseModule.forFeature([
       { name: Conversation.name, schema: ConversationSchema },
     ]),
-    forwardRef(() => WorkspacesModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => WorkspacesModule), // Usar forwardRef para romper dependencia circular
   ],
-  controllers: [ConversationsController], // Asegurar que el controlador esté registrado
+  controllers: [ConversationsController],
   providers: [ConversationsService],
-  exports: [
-    ConversationsService,
-    MongooseModule.forFeature([
-      { name: Conversation.name, schema: ConversationSchema },
-    ]),
-  ],
+  exports: [ConversationsService],
 })
 export class ConversationsModule {}

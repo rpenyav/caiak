@@ -12,7 +12,7 @@ import { ConversationsModule } from '../conversations/conversations.module';
       { name: Workspace.name, schema: WorkspaceSchema },
     ]),
     forwardRef(() => AuthModule),
-    forwardRef(() => ConversationsModule), // Añadir para ConversationsService
+    forwardRef(() => ConversationsModule), // Añadido para RolesGuard
   ],
   controllers: [WorkspacesController],
   providers: [WorkspacesService],

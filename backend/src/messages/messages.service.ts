@@ -10,9 +10,10 @@ import { ConversationsService } from '../conversations/conversations.service';
 import { OpenaiService } from '../openai/openai.service';
 import { AppConfigService } from '../config/app-config.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { Observable, from } from 'rxjs';
+import { Observable, from, tap } from 'rxjs';
 import OpenAI from 'openai';
 import { LogsService } from '../logs/logs.service';
+import { PromptsService } from '../prompts/prompts.service';
 
 @Injectable()
 export class MessagesService {
@@ -22,6 +23,7 @@ export class MessagesService {
     private readonly openaiService: OpenaiService,
     private readonly appConfigService: AppConfigService,
     private readonly logsService: LogsService,
+    private readonly promptsService: PromptsService,
   ) {}
 
   async createHumanMessage(req: any, createMessageDto: CreateMessageDto) {
@@ -59,18 +61,28 @@ export class MessagesService {
     });
     const savedMessage = await message.save();
 
+    // Obtener el prompt usado
+    let promptUsed = 'prompt de pruebas';
+    try {
+      const promptDoc = await this.promptsService.findFirstPrompt();
+      promptUsed = promptDoc.prompt;
+    } catch (error) {
+      // Usar prompt por defecto si no se encuentra
+    }
+
     // Loguear interacción humana
     await this.logsService.createLog(
       'interaction',
       userId,
-      'caiak-app-1', // Ajusta según tu appId
-      req.ip,
+      req.user?.appId || 'caiak-app-1',
+      req.ip || 'unknown',
       req.get('user-agent') || '',
       {
         conversationId: createMessageDto.conversationId,
         messageType: createMessageDto.type,
         content: createMessageDto.content,
         fileUrls: createMessageDto.fileUrls,
+        promptUsed,
       },
       'info',
     );
@@ -92,6 +104,10 @@ export class MessagesService {
           .find({ conversationId })
           .sort({ createdAt: 1 })
           .exec();
+
+        // Obtener el userId del mensaje humano más reciente
+        const lastHumanMessage = messages.find((msg) => msg.sender === 'human');
+        const userId = lastHumanMessage ? lastHumanMessage.userId : 'bot';
 
         const formattedMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
           messages.map((msg) => {
@@ -120,7 +136,46 @@ export class MessagesService {
             };
           });
 
-        return this.openaiService.generateStreamResponse(formattedMessages);
+        // Obtener el prompt usado
+        let promptUsed = 'prompt de pruebas';
+        try {
+          const promptDoc = await this.promptsService.findFirstPrompt();
+          promptUsed = promptDoc.prompt;
+        } catch (error) {
+          // Usar prompt por defecto si no se encuentra
+        }
+
+        const startTime = Date.now();
+        const stream =
+          await this.openaiService.generateStreamResponse(formattedMessages);
+
+        // Loguear interacción del bot
+        let fullResponse = '';
+        return stream.pipe(
+          tap({
+            next: (chunk: string) => {
+              fullResponse += chunk;
+            },
+            complete: async () => {
+              const responseTime = Date.now() - startTime;
+              await this.logsService.createLog(
+                'interaction',
+                userId,
+                'caiak-app-1',
+                'bot-ip',
+                'bot-agent',
+                {
+                  conversationId,
+                  messageType: 'text',
+                  content: fullResponse,
+                  promptUsed,
+                  responseTime,
+                },
+                'info',
+              );
+            },
+          }),
+        );
       });
   }
 
@@ -148,17 +203,27 @@ export class MessagesService {
     });
     const savedMessage = await message.save();
 
+    // Obtener el prompt usado
+    let promptUsed = 'prompt de pruebas';
+    try {
+      const promptDoc = await this.promptsService.findFirstPrompt();
+      promptUsed = promptDoc.prompt;
+    } catch (error) {
+      // Usar prompt por defecto si no se encuentra
+    }
+
     // Loguear interacción del bot
     await this.logsService.createLog(
       'interaction',
       userId,
-      'caiak-app-1', // Ajusta según tu appId
-      'bot-ip', // IP del bot no aplica, usa un valor dummy
-      'bot-agent', // User agent del bot no aplica, usa un valor dummy
+      'caiak-app-1',
+      'bot-ip',
+      'bot-agent',
       {
         conversationId,
         messageType: 'text',
         content,
+        promptUsed,
       },
       'info',
     );

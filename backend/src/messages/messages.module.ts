@@ -10,6 +10,7 @@ import { AppConfigModule } from '../config/app-config.module';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
 import { LogsModule } from '../logs/logs.module';
+import { PromptsModule } from '../prompts/prompts.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { LogsModule } from '../logs/logs.module';
     AppConfigModule,
     WorkspacesModule,
     FileUploadModule,
-    LogsModule, // Añadido para proporcionar LogsService
+    LogsModule,
+    PromptsModule, // Añadido para proporcionar PromptsService
   ],
   controllers: [MessagesController],
   providers: [MessagesService],
