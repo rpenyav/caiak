@@ -34,27 +34,35 @@ export class MessagesController {
         from(
           this.messagesService.generateBotResponse(humanMessage.conversationId),
         ).pipe(
-          concatMap((stream: Observable<string>) => {
-            let fullResponse = '';
-            return stream.pipe(
-              map((chunk: string) => {
-                fullResponse += chunk;
-                return { data: chunk } as MessageEvent;
-              }),
-              tap({
-                complete: () => {
-                  this.messagesService.saveBotMessage(
-                    humanMessage.conversationId,
-                    fullResponse,
-                    humanMessage.userId,
-                  );
-                },
-              }),
-              concatMap((event) =>
-                from([event, { data: '[DONE]' } as MessageEvent]),
-              ),
-            );
-          }),
+          concatMap(
+            (
+              stream: Observable<{ content: string; suggestTicket: boolean }>,
+            ) => {
+              let fullResponse = '';
+              return stream.pipe(
+                map(({ content, suggestTicket }) => {
+                  fullResponse += content;
+                  return { data: { content, suggestTicket } } as MessageEvent;
+                }),
+                tap({
+                  complete: () => {
+                    const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+                      fullResponse,
+                    );
+                    this.messagesService.saveBotMessage(
+                      humanMessage.conversationId,
+                      fullResponse,
+                      humanMessage.userId,
+                      suggestTicket,
+                    );
+                  },
+                }),
+                concatMap((event) =>
+                  from([event, { data: '[DONE]' } as MessageEvent]),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -67,25 +75,30 @@ export class MessagesController {
   ): Observable<MessageEvent> {
     let fullResponse = '';
     return from(this.messagesService.generateBotResponse(conversationId)).pipe(
-      concatMap((stream: Observable<string>) =>
-        stream.pipe(
-          map((chunk: string) => {
-            fullResponse += chunk;
-            return { data: chunk } as MessageEvent;
-          }),
-          tap({
-            complete: () => {
-              this.messagesService.saveBotMessage(
-                conversationId,
-                fullResponse,
-                'bot',
-              );
-            },
-          }),
-          concatMap((event) =>
-            from([event, { data: '[DONE]' } as MessageEvent]),
+      concatMap(
+        (stream: Observable<{ content: string; suggestTicket: boolean }>) =>
+          stream.pipe(
+            map(({ content, suggestTicket }) => {
+              fullResponse += content;
+              return { data: { content, suggestTicket } } as MessageEvent;
+            }),
+            tap({
+              complete: () => {
+                const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+                  fullResponse,
+                );
+                this.messagesService.saveBotMessage(
+                  conversationId,
+                  fullResponse,
+                  'bot',
+                  suggestTicket,
+                );
+              },
+            }),
+            concatMap((event) =>
+              from([event, { data: '[DONE]' } as MessageEvent]),
+            ),
           ),
-        ),
       ),
     );
   }

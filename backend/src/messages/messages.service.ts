@@ -10,7 +10,7 @@ import { ConversationsService } from '../conversations/conversations.service';
 import { OpenaiService } from '../openai/openai.service';
 import { AppConfigService } from '../config/app-config.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { Observable, from, tap } from 'rxjs';
+import { Observable, from, tap, map } from 'rxjs';
 import OpenAI from 'openai';
 import { LogsService } from '../logs/logs.service';
 import { PromptsService } from '../prompts/prompts.service';
@@ -90,7 +90,9 @@ export class MessagesService {
     return savedMessage;
   }
 
-  generateBotResponse(conversationId: string): Promise<Observable<string>> {
+  generateBotResponse(
+    conversationId: string,
+  ): Promise<Observable<{ content: string; suggestTicket: boolean }>> {
     return this.conversationsService
       .findById(conversationId)
       .then(async (conversation) => {
@@ -158,6 +160,9 @@ export class MessagesService {
             },
             complete: async () => {
               const responseTime = Date.now() - startTime;
+              const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+                fullResponse,
+              );
               await this.logsService.createLog(
                 'interaction',
                 userId,
@@ -170,10 +175,24 @@ export class MessagesService {
                   content: fullResponse,
                   promptUsed,
                   responseTime,
+                  suggestTicket,
                 },
                 'info',
               );
+              // Guardar mensaje del bot con suggestTicket
+              await this.saveBotMessage(
+                conversationId,
+                fullResponse,
+                userId,
+                suggestTicket,
+              );
             },
+          }),
+          map((chunk: string) => {
+            const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+              fullResponse + chunk,
+            );
+            return { content: chunk, suggestTicket };
           }),
         );
       });
@@ -183,6 +202,7 @@ export class MessagesService {
     conversationId: string,
     content: string,
     userId: string,
+    suggestTicket: boolean = false,
   ) {
     const conversation =
       await this.conversationsService.findById(conversationId);
@@ -200,6 +220,7 @@ export class MessagesService {
       workspaceSlug: conversation.workspaceSlug,
       type: 'text',
       createdAt: new Date(),
+      suggestTicket,
     });
     const savedMessage = await message.save();
 
@@ -224,6 +245,7 @@ export class MessagesService {
         messageType: 'text',
         content,
         promptUsed,
+        suggestTicket,
       },
       'info',
     );

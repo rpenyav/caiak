@@ -26,6 +26,9 @@ export class Message extends Document {
 
   @Prop({ type: [String], required: false })
   fileUrls?: string[]; // Array de URLs de archivos
+
+  @Prop({ type: Boolean, default: false })
+  suggestTicket: boolean; // Añadido para marcar respuestas que sugieren tickets
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
