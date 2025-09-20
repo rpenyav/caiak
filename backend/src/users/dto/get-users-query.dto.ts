@@ -1,0 +1,32 @@
+import { IsInt, Min, IsOptional, IsString, IsIn } from 'class-validator';
+import { Transform, TransformFnParams } from 'class-transformer';
+
+export class GetUsersQueryDto {
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Transform(({ value }: TransformFnParams) =>
+    value ? parseInt(value as string, 10) : 10,
+  )
+  pageSize: number = 10;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Transform(({ value }: TransformFnParams) =>
+    value ? parseInt(value as string, 10) : 1,
+  )
+  pageNumber: number = 1;
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['email', 'createdAt', 'updatedAt'])
+  @Transform(({ value }: TransformFnParams) => value || 'createdAt')
+  sortBy: string = 'createdAt';
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  @Transform(({ value }: TransformFnParams) => value || 'desc')
+  sortDirection: string = 'desc';
+}
