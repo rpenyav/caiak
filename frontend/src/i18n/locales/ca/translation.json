@@ -1,0 +1,340 @@
+{
+    "loading": "Carregant...",
+    "common": {
+        "noResults": "No hi ha resultats.",
+        "loading": "Carregant...",
+        "save_continue": "Guardar i continuar",
+        "cancel": "Cancelar",
+        "back": "Tornar",
+        "optional": "opcional",
+        "buscar": "Cercar",
+        "buscando": "Cercant...",
+        "cerrar": "Tancar",
+        "contact_support": "Si us plau, contacta amb suport tècnic per actualitzar el teu correu i poder completar l’alta d’usuari."
+    },
+    "pages": {
+        "expedients": {
+            "title": "Expedients",
+            "showClosed": "Mostrar expedients tancats",
+            "filterPlaceholder": "Filtrar per…",
+            "deletedLog": "Expedient eliminat"
+        },
+        "expedientDetail": {
+            "notFound": "Expedient no trobat.",
+            "backToList": "Tornar als expedients",
+            "fields": {
+                "number": "Nº:",
+                "reference": "Referència:",
+                "openDate": "Alta:",
+                "status": "Estat:",
+                "office": "Oficina:",
+                "archivedDate": "Data arxivat:"
+            },
+            "tabs": {
+                "folders": "Carpetes",
+                "documents": "Documentació"
+            },
+            "documentsPlaceholder": "Encara no hi ha documentació."
+        },
+        "visites": {
+            "fechaAPartir": "Data a partir de",
+            "tipoVisita": "Tipus de visita",
+            "modalidad": "Modalitat",
+            "presencial": "Presencial",
+            "telefonica": "Telefònica",
+            "videoconferencia": "Videoconferència",
+            "otra": "Una altra",
+            "despachoId": "Despacho (ID)",
+            "grupoId": "Grupo (ID)",
+            "loaderMsg": "Buscant visites disponibles, un moment si us plau...",
+            "sinResultados": "Sense resultats.",
+            "tipo": "Tipus",
+            "despacho": "Despacho",
+            "detalleVisita": "Detall de la visita",
+            "fecha": "Data",
+            "hora": "Hora",
+            "grupo": "Grup",
+            "abogados": "Advocats",
+            "confirmarVisita": "Confirmar visita",
+            "confirmando": "Confirmant...",
+            "confirmOk": "Visita confirmada correctament.",
+            "confirmError": "No s'ha pogut confirmar la visita."
+        },
+        "consultes": {
+            "title": "Consultes",
+            "sidebarTitle": "Les teves converses",
+            "threadTitle": "Fil",
+            "noConversations": "No tens converses.",
+            "noMessages": "No hi ha missatges en aquesta conversa.",
+            "selectConversation": "Selecciona una conversa.",
+            "newConversation": "Nova consulta",
+            "startNewHint": "Escriu el teu missatge i envia-ho per crear una nova consulta.",
+            "composerLabel": "Enviar missatge",
+            "composerPlaceholder": "Escriu el teu missatge…",
+            "send": "Enviar",
+            "sending": "Enviant…",
+            "errorConversations": "No s'han pogut carregar les converses.",
+            "errorMessages": "No s'han pogut carregar els missatges.",
+            "errorSend": "No s'ha pogut enviar el missatge.",
+            "conversation": "Conversa #{{id}}"
+        }
+    },
+    "components": {
+        "factures": {
+            "loading": "Carregant factures…",
+            "empty": "Sense factures.",
+            "collapse": "Plegar",
+            "viewcancelled": "Mostrar factures cancel·lades"
+        },
+        "expedientsFolders": {
+            "loading": "Carregant carpetes…",
+            "empty": "Sense carpetes.",
+            "collapse": "Plegar",
+            "expand": "Desplegar",
+            "ariaSelectOrToggle": "Seleccionar o desplegar carpeta",
+            "noSelection": "Selecciona una carpeta…",
+            "fallbackHeader": "Carpeta #{{id}}",
+            "courtFallback": "Jutjat #{{id}}",
+            "fields": {
+                "number": "Número:",
+                "name": "Nom:",
+                "openDate": "Alta:",
+                "group": "Grup:",
+                "court": "Jutjat:",
+                "office": "Despatx:",
+                "archiveNo": "Num. arxiu:",
+                "observations": "Observacions:",
+                "tutor": "Tutor:"
+            }
+        },
+        "expedientsFolderDetail": {
+            "tabs": {
+                "proc": "Seguiment processal",
+                "economic": "Seguiment econòmic",
+                "docs": "Documentació"
+            },
+            "economic": {
+                "intro": "Contingut de seguiment econòmic (carpeta #{{id}})",
+                "empty": "Sense dades per ara."
+            },
+            "docs": {
+                "intro": "Documentació associada (carpeta #{{id}})",
+                "empty": "No hi ha documents disponibles."
+            }
+        },
+        "expedientsSeguimentProcesal": {
+            "loading": "Carregant seguiment…",
+            "empty": "Sense registres.",
+            "fallbackTitle": "Línia #{{id}}"
+        }
+    },
+    "register": {
+        "title_existing": "Alta d'usuari",
+        "title_new": "Registre",
+        "title": "Accedeix",
+        "email": "Correu electrònic",
+        "username": "Nom d'usuari",
+        "password": "Contrasenya",
+        "submit": "Registrar-se",
+        "introducedni": "Introdueix el teu NIF/DNI per validar el teu compte.",
+        "crearcuenta": "Crear compte",
+        "client_only_title": "Ja ets client",
+        "client_only_message": "El teu NIF està registrat com a client però no tens accés com a usuari.",
+        "solicitar_acceso": "Sol·licitar accés",
+        "not_found_title": "No registrat",
+        "not_found_message": "No hem trobat aquest NIF. Pots registrar-te per sol·licitar accés.",
+        "tooltip_existing": "Comprova les teves dades i crea la teva contrasenya per activar l’usuari.",
+        "tooltip_new": "Omple les teves dades per registrar-te."
+    },
+    "recover": {
+        "title": "Recupera el teu compte",
+        "email": "Correu electrònic",
+        "submit": "Enviar enllaç de recuperació",
+        "sent": "Si el correu està registrat, t'hem enviat un enllaç de recuperació."
+    },
+    "login": {
+        "title": "Inicia sessió",
+        "username": "Nom d'usuari",
+        "email": "E-mail",
+        "password": "Contrasenya",
+        "submit": "Accedir",
+        "loading": "Accedint...",
+        "error": "Credencials incorrectes.",
+        "register_title": "Registra't",
+        "login_title": "Inicia sessió",
+        "login_button": "Accedir",
+        "recover_title": "Recuperar compte",
+        "recover_submit": "Enviar enllaç",
+        "forgot_password": "Has oblidat la contrasenya?",
+        "back_to_login": "Tornar",
+        "tooltip": {
+            "unknown": "Introdueix el teu DNI per validar si estàs registrat.",
+            "client_only": "Ets client però no tens usuari encara. Sol·licita accés.",
+            "client_and_user": "Accedeix amb la teva contrasenya o recupera l'accés.",
+            "not_found": "No s'ha trobat el DNI. Pots registrar-te si ets nou.",
+            "lopd": "Abans de continuar, cal acceptar la política de protecció de dades (LOPD). Les dades s'enviaran en acceptar."
+        }
+    },
+    "identify": {
+        "tooltip": "Introdueix el teu DNI/NIF per validar si estàs registrat."
+    },
+    "lopd": {
+        "title": "Protecció de Dades (LOPD)",
+        "description": "Abans de continuar, has d'acceptar la política de protecció de dades. Les teves dades s'enviaran en acceptar.",
+        "long_text": "Text legal de la LOPD... (inclou aquí el contingut facilitat pel departament legal).",
+        "accept_label": "He llegit i accepto la política de protecció de dades.",
+        "accept_and_continue": "Acceptar i enviar",
+        "must_accept": "Heu d'acceptar la LOPD",
+        "accept_button": "Acceptar LOPD",
+        "tooltip": "Cal acceptar la LOPD per continuar.",
+        "accepted": "LOPD acceptada",
+        "disclaimer_intro": "Per continuar, has d’acceptar la política de protecció de dades.",
+        "text_1": "Consento el tractament de les meves dades d’acord amb la normativa vigent.",
+        "text_2": "He llegit la informació sobre protecció de dades i els meus drets.",
+        "intro": "Estàs veient aquesta pantalla perquè encara no tenim la teva autorització per gestionar les teves dades en relació amb la LOPD. T’oferim la informació i, si hi estàs d’acord, ens pots autoritzar marcant la casella corresponent.",
+        "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non lorem a magna efficitur suscipit. Nulla facilisi. Suspendisse finibus malesuada mauris, vitae semper justo sagittis vel. Integer facilisis justo a arcu ultrices, sit amet dignissim risus posuere.",
+        "lorem2": "Aliquam dictum, massa sit amet fringilla viverra, felis nisl dignissim leo, ac ultricies risus nunc id turpis. Phasellus vitae pulvinar nibh, id suscipit odio. Vestibulum id vulputate nisi, ac semper nibh.",
+        "optin_campaigns": "Consento l’enviament de campanyes",
+        "optin_circulars": "Consento l’enviament de circulars",
+        "required": "Has d’acceptar per continuar."
+    },
+    "user": {
+        "documentType": "Tipus de document",
+        "documentNumber": "Número de document",
+        "firstName": "Nom",
+        "lastName": "Cognoms",
+        "birthDate": "Data de naixement",
+        "email": "Correu electrònic",
+        "phone": "Telèfon",
+        "phoneLandlinePrefix": "Prefix fix",
+        "phoneLandlineNumber": "Telèfon fix",
+        "phoneMobilePrefix": "Prefix mòbil",
+        "phoneMobileNumber": "Telèfon mòbil",
+        "address": "Adreça",
+        "postalCode": "Codi postal",
+        "city": "Població",
+        "language": "Idioma de comunicació",
+        "country": "País",
+        "password": "Contrasenya",
+        "confirmPassword": "Repetir contrasenya",
+        "password_required": "La contrasenya és obligatòria.",
+        "confirmPassword_required": "Heu de repetir la contrasenya.",
+        "password_minlength": "La contrasenya ha de tenir almenys 8 caràcters.",
+        "password_need_letter": "La contrasenya ha de contenir almenys una lletra.",
+        "password_need_number": "La contrasenya ha de contenir almenys un número.",
+        "password_mismatch": "Les contrasenyes no coincideixen.",
+        "documentType_required": "El tipus de document és obligatori.",
+        "documentNumber_required": "El número de document és obligatori.",
+        "firstName_required": "El nom és obligatori.",
+        "lastName_required": "Els cognoms són obligatoris.",
+        "email_required": "El correu electrònic és obligatori.",
+        "email_invalid": "El correu electrònic no és vàlid.",
+        "password_invalid": "Contrasenya invàlida.",
+        "address_required": "L'adreça és obligatòria.",
+        "postalCode_required": "El cp és obligatori.",
+        "language_required": "L'idioma de comunicació és obligatori.",
+        "passwordchange": "Canviar la contrasenya",
+        "change_password": "Canviar la contrasenya",
+        "current_password": "Contrasenya actual",
+        "new_password": "Nova contrasenya",
+        "city_required": "La població és obligatòria.",
+        "province": "Província"
+    },
+    "options": {
+        "documentType": {
+            "DNI": "DNI",
+            "NIF": "NIF",
+            "NIE": "NIE"
+        }
+    },
+    "errors": {
+        "required": "Requerit",
+        "invalidEmail": "Correu electrònic no vàlid",
+        "passwordsDontMatch": "Les contrasenyes no coincideixen",
+        "expedients_load": "Error en carregar els expedients ({{status}} {{statusText}}).",
+        "child_folders_load": "Error en carregar les carpetes filles ({{status}} {{statusText}}).",
+        "lsp_load": "Error en carregar el seguiment processal ({{status}} {{statusText}}).",
+        "expedients_generic": "Error en carregar expedients.",
+        "folders_generic": "Error en carregar carpetes.",
+        "lsp_generic": "Error en carregar el seguiment processal."
+    },
+    "notFound": {
+        "message": "Pàgina no trobada",
+        "backToHome": "Torna a l'inici"
+    },
+    "menu": {
+        "home": "Inici",
+        "dashboard": "Tauler",
+        "expedients": "Expedients",
+        "agenda": "Agenda",
+        "facturacio": "Facturació",
+        "visites": "Visites",
+        "documentacio": "Documentació",
+        "perfil": "Les meves dades",
+        "backoffice": "Backoffice",
+        "logout": "Tanca la sessió",
+        "pendents": "Pendents",
+        "consultes": "Consultes i respostes"
+    },
+    "confirm": {
+        "title": "Estàs segur?",
+        "text": "Aquesta acció no es pot desfer",
+        "confirmButtonText": "Sí, eliminar",
+        "cancelButtonText": "Cancel·lar"
+    },
+    "toast": {
+        "success": "Element eliminat",
+        "error": "Error en eliminar l'element"
+    },
+    "table": {
+        "actions": "Accions",
+        "noresults": "No hi ha resultats disponibles.",
+        "showingResults": "Mostrant {{count}} de {{total}} resultats",
+        "itemDetails": "Detalls de l'ítem",
+        "close": "Tancar",
+        "previous": "Anterior",
+        "next": "Següent"
+    },
+    "fileUpload": {
+        "dragAndDrop": "Arrossega els teus fitxers aquí o fes clic per seleccionar",
+        "uploadValidFiles": "Pujar fitxers vàlids"
+    },
+    "invite": {
+        "title": "Crear usuari",
+        "message": "Rebràs un correu a l’adreça associada al teu client per continuar el procés.",
+        "request": "Sol·licitar accés",
+        "sent": "Enllaç enviat",
+        "check_email": "Revisa la bústia d’entrada per continuar.",
+        "error_user_exists": "L’usuari ja existeix.",
+        "error_user_not_exists": "L’usuari no existeix.",
+        "tooltip": "T’enviarem un correu amb un enllaç per continuar l’alta d’usuari."
+    },
+    "profile": {
+        "password_changed": "Contrasenya actualitzada",
+        "settings": "Configuració",
+        "settings_title": "Configuració del perfil",
+        "settings_placeholder": "Introdueix les teves preferències de configuració"
+    },
+    "chat": {
+        "titleBase": "Assistència / Xat",
+        "fab": "Xat",
+        "openFabLabel": "Obrir xat d'assistència",
+        "minimize": "Minimitzar xat",
+        "placeholder": "Escriu un missatge…",
+        "send": "Enviar",
+        "typing": "Escrivint…",
+        "greeting": "Hola 👋 En què et puc ajudar?",
+        "errorGeneric": "S’ha produït un error generant la resposta"
+    },
+    "reset": {
+        "title": "Contrasenya nova",
+        "intro": "Introdueix i confirma la teva nova contrasenya per completar la recuperació.",
+        "new_password": "Contrasenya nova",
+        "repeat_password": "Repeteix la contrasenya",
+        "submit": "Desar contrasenya",
+        "success": "La contrasenya s'ha actualitzat correctament. Ja pots iniciar sessió.",
+        "error": "No hem pogut actualitzar la contrasenya. Torna-ho a provar.",
+        "token_invalid": "L’enllaç ha caducat o no és vàlid. Sol·licita’n un de nou des de la pantalla d'inici de sessió.",
+        "back_to_login": "Anar a iniciar sessió"
+    }
+}

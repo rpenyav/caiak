@@ -1,0 +1,117 @@
+/* src/ui/components/ChatBot.scss */
+
+.chatbot {
+  --chatbot-brand: #970c1f;
+  --chatbot-z: 2000;
+
+  position: fixed;
+  inset: auto 16px 16px auto;
+  z-index: var(--chatbot-z);
+
+  .chatbot__fab {
+    background-color: var(--chatbot-brand);
+    border-color: var(--chatbot-brand);
+    color: #fff;
+    border-radius: 999px;
+    padding: 8px 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+
+  .chatbot__panel {
+    width: min(360px, 92vw);
+    min-height: 500px; /* 👈 altura mínima */
+    max-height: 70vh;
+    overflow: hidden;
+    position: fixed;
+    right: 86px;
+    bottom: 16px;
+    z-index: var(--chatbot-z);
+
+    display: flex; /* para que el body crezca */
+    flex-direction: column;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .chatbot__header {
+    background: var(--chatbot-brand);
+    color: #fff;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chatbot__title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 80%;
+  }
+
+  .chatbot__body {
+    background: #fff;
+    padding: 12px;
+    display: flex; /* ocupa el resto del alto */
+    flex-direction: column;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-height: 0; /* permite que los hijos hagan overflow:auto */
+  }
+
+  .chatbot__messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto; /* crece para ocupar */
+    min-height: 0;
+    overflow: auto; /* scroll aquí */
+  }
+
+  .bubble {
+    max-width: 80%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+
+    &--them {
+      background: #f1f3f5;
+      color: #333;
+      align-self: flex-start;
+    }
+    &--me {
+      background: var(--chatbot-brand);
+      color: #fff;
+      align-self: flex-end;
+    }
+
+    .bubble__time {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+  }
+
+  .chatbot__composer {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+  }
+}
+
+/* Fallback para pantallas muy bajas: respeta el viewport */
+@media (max-height: 560px) {
+  .chatbot .chatbot__panel {
+    min-height: auto;
+    max-height: calc(100vh - 32px);
+  }
+}

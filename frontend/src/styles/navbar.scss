@@ -1,0 +1,77 @@
+.bg-dark {
+  background-color: #930f21 !important;
+  color: white;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  align-items: center;
+}
+
+.menu-link-lowercase {
+  text-transform: none !important; /* minúsculas */
+  color: #000000 !important; /* color negro */
+  padding: 0.5rem 0, 2rem; /* padding vertical/horizontal */
+}
+
+.menu-link-lowercase:hover {
+  color: #d94c5f !important; /* color hover (opcional) */
+}
+
+.menu-link,
+.menu-link:visited,
+.menu-link:hover,
+.menu-link:focus,
+.menu-link:active {
+  text-decoration: none !important;
+}
+
+/* Estilos generales del menú */
+.menu-link {
+  transition: color 0.2s ease-in-out;
+}
+
+/* Versión desktop (≥768px) */
+@media (min-width: 768px) {
+  .menu-link {
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .menu-link:hover {
+    color: #ed9db6;
+  }
+
+  .menu-link.active {
+    color: #ea5c6f !important;
+  }
+}
+
+/* Versión mobile (<768px) */
+@media (max-width: 767.98px) {
+  .menu-link {
+    text-transform: none;
+    color: #930f21;
+  }
+
+  .menu-link:hover {
+    color: #ed9db6;
+  }
+
+  .menu-link.active {
+    color: #d94c5f !important;
+  }
+}
+
+.offcanvas-custom {
+  background-color: #ffffff; /* fondo blanco */
+  color: #930f21; /* color principal del texto (ajústalo si es necesario) */
+}
+
+.navbar-toggler-white:focus,
+.navbar-toggler-white:active {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler-white .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}

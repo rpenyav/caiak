@@ -1,0 +1,4 @@
+# .husky/pre-commit
+#!/usr/bin/env sh
+echo "→ pre-commit: ok"
+exit 0

@@ -1,0 +1,54 @@
+@use "bootstrap/scss/bootstrap" as *;
+@use "./components.scss";
+@use "./navbar.scss";
+@use "./masonry.scss";
+@use "./cards.scss";
+@use "./pages.scss";
+@use "./calendar.scss";
+@use "./chat.scss";
+@use "./layout.scss";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html,
+body {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 13px;
+  font-variation-settings: "wdth" 100;
+}
+
+.breadcrumb-link {
+  color: #000000;
+  text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    color: #000000;
+  }
+}
+
+.custom-hover:hover {
+  background-color: #f8d6e3 !important;
+}
+
+.btn-custom-link {
+  color: #000000;
+  text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: #000000;
+  }
+}
+
+.bg-custom-primary {
+  background-color: #970c1f !important;
+}

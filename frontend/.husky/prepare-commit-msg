@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+set -e
+
+MSG_FILE="$1"
+SOURCE="$2" # e.g. message|template|merge|squash|commit
+
+# ==== Evitar rebases/merges/squash/amend ====
+# Rebase detect
+if [ -n "$GIT_REBASE" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ] || [ -d "$(git rev-parse --git-path rebase-merge)" ]; then
+  echo "→ prepare-commit-msg: rebase detected → skip bump"
+  exit 0
+fi
+
+# Merge / squash commits
+if [ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ]; then
+  echo "→ prepare-commit-msg: merge/squash → skip bump"
+  exit 0
+fi
+
+# Subject (primera línea, lowercase + trim)
+SUBJECT="$(sed -n '1p' "$MSG_FILE" | tr '[:upper:]' '[:lower:]' | xargs)"
+
+# Ignorar commits automáticos típicos
+case "$SUBJECT" in
+  "merge "*|"revert "*|"fixup!"*|"squash!"*)
+    echo "→ auto commit (merge/revert/fixup/squash) → skip bump"
+    exit 0
+  ;;
+esac
+
+echo "→ subject: $SUBJECT"
+
+# ==== Mapeo de bump (ajusta a tu gusto) ====
+DO_BUMP=""
+if printf "%s\n" "$SUBJECT" | grep -qE '^feat(\(.+\))?:'; then
+  DO_BUMP="major"
+elif printf "%s\n" "$SUBJECT" | grep -qE '^fix(\(.+\))?:'; then
+  DO_BUMP="minor"
+elif printf "%s\n" "$SUBJECT" | grep -qE '^chore(\(.+\))?:'; then
+  DO_BUMP="patch"
+fi
+
+if [ -z "$DO_BUMP" ]; then
+  echo "→ no keyword (feat|fix|chore) → no bump"
+  exit 0
+fi
+
+echo "→ bump: $DO_BUMP"
+npm version "$DO_BUMP" --no-git-tag-version 1>/dev/null
+
+# Solo añadir si realmente cambió
+if git diff --quiet -- package.json; then
+  echo "→ package.json no cambió (nada que añadir)"
+  exit 0
+fi
+
+git add package.json
+echo "→ package.json añadido al commit"

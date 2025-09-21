@@ -1,0 +1,340 @@
+{
+    "loading": "Loading...",
+    "common": {
+        "noResults": "No results.",
+        "loading": "Loading...",
+        "save_continue": "Save and continue",
+        "cancel": "Cancel",
+        "back": "Back",
+        "optional": "optional",
+        "buscar": "Search",
+        "buscando": "Searching...",
+        "cerrar": "Close",
+        "contact_support": "Please contact support to update your email and complete the user sign-up."
+    },
+    "pages": {
+        "expedients": {
+            "title": "Cases",
+            "showClosed": "Show closed cases",
+            "filterPlaceholder": "Filter by…",
+            "deletedLog": "Case deleted"
+        },
+        "expedientDetail": {
+            "notFound": "Case not found.",
+            "backToList": "Back to cases",
+            "fields": {
+                "number": "No.:",
+                "reference": "Reference:",
+                "openDate": "Opened:",
+                "status": "Status:",
+                "office": "Office:",
+                "archivedDate": "Archived date:"
+            },
+            "tabs": {
+                "folders": "Folders",
+                "documents": "Documents"
+            },
+            "documentsPlaceholder": "No documents yet."
+        },
+        "visites": {
+            "fechaAPartir": "Date from",
+            "tipoVisita": "Type of visit",
+            "modalidad": "Modality",
+            "presencial": "In-person",
+            "telefonica": "Phone",
+            "videoconferencia": "Video conference",
+            "otra": "Other",
+            "despachoId": "Office (ID)",
+            "grupoId": "Group (ID)",
+            "loaderMsg": "Searching for available visits, please wait...",
+            "sinResultados": "No results.",
+            "tipo": "Type",
+            "despacho": "Office",
+            "detalleVisita": "Visit details",
+            "fecha": "Date",
+            "hora": "Time",
+            "grupo": "Group",
+            "abogados": "Lawyers",
+            "confirmarVisita": "Confirm visit",
+            "confirmando": "Confirming...",
+            "confirmOk": "Visit confirmed successfully.",
+            "confirmError": "Could not confirm the visit."
+        },
+        "consultes": {
+            "title": "Consultes",
+            "sidebarTitle": "Tus conversaciones",
+            "threadTitle": "Thread",
+            "noConversations": "No tienes conversaciones.",
+            "noMessages": "No hay mensajes en esta conversación.",
+            "selectConversation": "Selecciona una conversación.",
+            "newConversation": "Nueva consulta",
+            "startNewHint": "Escribe tu mensaje y envíalo para crear una nueva consulta.",
+            "composerLabel": "Enviar mensaje",
+            "composerPlaceholder": "Escribe tu mensaje…",
+            "send": "Enviar",
+            "sending": "Enviando…",
+            "errorConversations": "No se pudieron cargar las conversaciones.",
+            "errorMessages": "No se pudieron cargar los mensajes.",
+            "errorSend": "No se pudo enviar el mensaje.",
+            "conversation": "Conversation #{{id}}"
+        }
+    },
+    "components": {
+        "factures": {
+            "loading": "Loading invoices…",
+            "empty": "No invoices.",
+            "collapse": "Collapse",
+            "viewcancelled": "Show cancelled invoices"
+        },
+        "expedientsFolders": {
+            "loading": "Loading folders…",
+            "empty": "No folders.",
+            "collapse": "Collapse",
+            "expand": "Expand",
+            "ariaSelectOrToggle": "Select or toggle folder",
+            "noSelection": "Select a folder…",
+            "fallbackHeader": "Folder #{{id}}",
+            "courtFallback": "Court #{{id}}",
+            "fields": {
+                "number": "Number:",
+                "name": "Name:",
+                "openDate": "Opened:",
+                "group": "Group:",
+                "court": "Court:",
+                "office": "Office:",
+                "archiveNo": "Archive no.:",
+                "observations": "Notes:",
+                "tutor": "Owner:"
+            }
+        },
+        "expedientsFolderDetail": {
+            "tabs": {
+                "proc": "Procedural tracking",
+                "economic": "Financial tracking",
+                "docs": "Documents"
+            },
+            "economic": {
+                "intro": "Financial tracking content (folder #{{id}})",
+                "empty": "No data yet."
+            },
+            "docs": {
+                "intro": "Associated documents (folder #{{id}})",
+                "empty": "No documents available."
+            }
+        },
+        "expedientsSeguimentProcesal": {
+            "loading": "Loading tracking…",
+            "empty": "No records.",
+            "fallbackTitle": "Line #{{id}}"
+        }
+    },
+    "register": {
+        "title_existing": "User registration",
+        "title_new": "Register",
+        "title": "Sign in",
+        "email": "Email",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Register",
+        "introducedni": "Enter your NIF/DNI to proceed with creating your account.",
+        "crearcuenta": "Create account",
+        "client_only_title": "You are already a client",
+        "client_only_message": "Your NIF is registered as a client, but you do not yet have user access.",
+        "solicitar_acceso": "Request access",
+        "not_found_title": "Not registered",
+        "not_found_message": "We could not find your NIF. You can register to request access.",
+        "tooltip_existing": "Review your details and create your password to activate your user.",
+        "tooltip_new": "Fill in your details to sign up."
+    },
+    "recover": {
+        "title": "Recover account",
+        "email": "Email",
+        "submit": "Send recovery link",
+        "sent": "If the email is registered, we have sent you a recovery link."
+    },
+    "login": {
+        "title": "Log in",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Access",
+        "login_button": "Access",
+        "loading": "Logging in...",
+        "error": "Incorrect credentials.",
+        "register_title": "Register",
+        "login_title": "Log in",
+        "recover_title": "Recover account",
+        "recover_submit": "Send link",
+        "forgot_password": "Forgot your password?",
+        "back_to_login": "← Back",
+        "tooltip": {
+            "unknown": "Enter your DNI to validate if you are registered.",
+            "client_only": "You are a client but do not yet have a user account. Request access.",
+            "client_and_user": "Log in with your password or recover access.",
+            "not_found": "DNI not found. You can register if you are new.",
+            "lopd": "Before continuing, you must accept the data protection policy (LOPD). Your data will be sent upon acceptance."
+        }
+    },
+    "identify": {
+        "tooltip": "Enter your DNI/NIF to validate whether you are registered."
+    },
+    "lopd": {
+        "title": "Data Protection (LOPD)",
+        "description": "Before continuing, you must accept the data protection policy. Your data will be sent upon acceptance.",
+        "long_text": "LOPD legal text… (include here the content provided by the legal department).",
+        "accept_label": "I have read and accept the data protection policy.",
+        "accept_and_continue": "Accept and send",
+        "must_accept": "You must accept the LOPD",
+        "accept_button": "Accept LOPD",
+        "tooltip": "You must accept the LOPD to continue.",
+        "accepted": "LOPD accepted",
+        "disclaimer_intro": "To continue, you must accept the data protection policy.",
+        "text_1": "I consent to the processing of my personal data in accordance with the applicable regulations.",
+        "text_2": "I have read the information on data protection and my rights.",
+        "intro": "You’re seeing this screen because we don’t yet have your consent to process your data in relation to data protection (LOPD/GDPR). We show you the information and, if you agree, you can authorize us by ticking the corresponding box.",
+        "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non lorem a magna efficitur suscipit. Nulla facilisi. Suspendisse finibus malesuada mauris, vitae semper justo sagittis vel. Integer facilisis justo a arcu ultrices, sit amet dignissim risus posuere.",
+        "lorem2": "Aliquam dictum, massa sit amet fringilla viverra, felis nisl dignissim leo, ac ultricies risus nunc id turpis. Phasellus vitae pulvinar nibh, id suscipit odio. Vestibulum id vulputate nisi, ac semper nibh.",
+        "optin_campaigns": "I consent to receiving campaigns",
+        "optin_circulars": "I consent to receiving circulars/newsletters",
+        "required": "You must accept to continue."
+    },
+    "user": {
+        "documentType": "Document type",
+        "documentNumber": "Document number",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "birthDate": "Date of birth",
+        "email": "Email",
+        "phone": "Phone",
+        "phoneLandlinePrefix": "Landline prefix",
+        "phoneLandlineNumber": "Landline phone",
+        "phoneMobilePrefix": "Mobile prefix",
+        "phoneMobileNumber": "Mobile phone",
+        "address": "Address",
+        "postalCode": "Postal code",
+        "city": "City",
+        "language": "Communication language",
+        "country": "Country",
+        "password": "Password",
+        "confirmPassword": "Repeat password",
+        "password_required": "Password is required.",
+        "confirmPassword_required": "You must repeat the password.",
+        "password_minlength": "Password must be at least 8 characters.",
+        "password_need_letter": "Password must contain at least one letter.",
+        "password_need_number": "Password must contain at least one number.",
+        "password_mismatch": "Passwords do not match.",
+        "documentType_required": "Document type is required.",
+        "documentNumber_required": "Document number is required.",
+        "firstName_required": "First name is required.",
+        "lastName_required": "Last name is required.",
+        "email_required": "Email is required.",
+        "email_invalid": "Invalid email.",
+        "password_invalid": "Invalid password.",
+        "address_required": "Address is required.",
+        "postalCode_required": "Postal code is required.",
+        "language_required": "Communication language is required.",
+        "passwordchange": "Change password",
+        "change_password": "Change password",
+        "current_password": "Current password",
+        "new_password": "New password",
+        "city_required": "City is required.",
+        "province": "Province"
+    },
+    "options": {
+        "documentType": {
+            "DNI": "DNI",
+            "NIF": "NIF",
+            "NIE": "NIE"
+        }
+    },
+    "errors": {
+        "required": "Required",
+        "invalidEmail": "Invalid email",
+        "passwordsDontMatch": "Passwords do not match",
+        "expedients_load": "Error loading cases ({{status}} {{statusText}}).",
+        "child_folders_load": "Error loading child folders ({{status}} {{statusText}}).",
+        "lsp_load": "Error loading procedural tracking ({{status}} {{statusText}}).",
+        "expedients_generic": "Failed to load cases.",
+        "folders_generic": "Failed to load folders.",
+        "lsp_generic": "Failed to load procedural tracking."
+    },
+    "notFound": {
+        "message": "Page not found",
+        "backToHome": "Back to home"
+    },
+    "menu": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "expedients": "Files",
+        "agenda": "Agenda",
+        "facturacio": "Billing",
+        "visites": "Visits",
+        "documentacio": "Documentation",
+        "perfil": "My data",
+        "backoffice": "Backoffice",
+        "logout": "Log out",
+        "pendents": "Pending",
+        "consultes": "Inquiries and answers"
+    },
+    "confirm": {
+        "title": "Are you sure?",
+        "text": "This action cannot be undone",
+        "confirmButtonText": "Yes, delete",
+        "cancelButtonText": "Cancel"
+    },
+    "toast": {
+        "success": "Item deleted",
+        "error": "Error deleting item"
+    },
+    "table": {
+        "actions": "Actions",
+        "noresults": "No results available.",
+        "showingResults": "Showing {{count}} of {{total}} results",
+        "itemDetails": "Item details",
+        "close": "Close",
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "fileUpload": {
+        "dragAndDrop": "Drag your files here or click to select",
+        "uploadValidFiles": "Upload valid files"
+    },
+    "invite": {
+        "title": "Create user",
+        "message": "You will receive an email at the address associated with your account to continue the process.",
+        "request": "Request access",
+        "sent": "Link sent",
+        "check_email": "Check your inbox to continue.",
+        "error_user_exists": "The user already exists.",
+        "error_user_not_exists": "The user does not exist.",
+        "tooltip": "We’ll send you an email with a link to continue user registration."
+    },
+    "profile": {
+        "password_changed": "Password updated",
+        "settings": "Settings",
+        "settings_title": "Profile Settings",
+        "settings_placeholder": "Enter your configuration preferences"
+    },
+    "chat": {
+        "titleBase": "Support / Chat",
+        "fab": "Chat",
+        "openFabLabel": "Open support chat",
+        "minimize": "Minimize chat",
+        "placeholder": "Type a message…",
+        "send": "Send",
+        "typing": "Typing…",
+        "greeting": "Hello 👋 How can I help you?",
+        "errorGeneric": "An error occurred while generating the response"
+    },
+    "reset": {
+        "title": "New password",
+        "intro": "Enter and confirm your new password to complete the reset.",
+        "new_password": "New password",
+        "repeat_password": "Repeat new password",
+        "submit": "Save password",
+        "success": "Your password has been updated. You can now sign in.",
+        "error": "We couldn't update your password. Please try again.",
+        "token_invalid": "The link has expired or is invalid. Request a new one from the sign-in screen.",
+        "back_to_login": "Go to sign in"
+    }
+}

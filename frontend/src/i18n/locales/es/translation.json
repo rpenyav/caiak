@@ -1,0 +1,340 @@
+{
+    "loading": "Cargando...",
+    "common": {
+        "noResults": "No hay resultados.",
+        "loading": "Cargando...",
+        "save_continue": "Guardar y continuar",
+        "cancel": "Cancelar",
+        "back": "Volver",
+        "optional": "opcional",
+        "buscar": "Buscar",
+        "buscando": "Buscando...",
+        "cerrar": "Cerrar",
+        "contact_support": "Por favor, contacta con soporte técnico para actualizar tu correo y poder completar el alta de usuario."
+    },
+    "pages": {
+        "expedients": {
+            "title": "Expedientes",
+            "showClosed": "Mostrar expedientes cerrados",
+            "filterPlaceholder": "Filtrar por…",
+            "deletedLog": "Expediente eliminado"
+        },
+        "expedientDetail": {
+            "notFound": "Expediente no encontrado.",
+            "backToList": "Volver a expedientes",
+            "fields": {
+                "number": "Nº:",
+                "reference": "Referencia:",
+                "openDate": "Alta:",
+                "status": "Estado:",
+                "office": "Oficina:",
+                "archivedDate": "Fecha de archivo:"
+            },
+            "tabs": {
+                "folders": "Carpetas",
+                "documents": "Documentación"
+            },
+            "documentsPlaceholder": "Aún no hay documentación."
+        },
+        "visites": {
+            "fechaAPartir": "Fecha a partir de",
+            "tipoVisita": "Tipo de visita",
+            "modalidad": "Modalidad",
+            "presencial": "Presencial",
+            "telefonica": "Telefónica",
+            "videoconferencia": "Videoconferencia",
+            "otra": "Otra",
+            "despachoId": "Despacho (ID)",
+            "grupoId": "Grupo (ID)",
+            "loaderMsg": "Buscando visitas disponibles, un momento por favor...",
+            "sinResultados": "Sin resultados.",
+            "tipo": "tipo",
+            "despacho": "Despacho",
+            "detalleVisita": "Detalle de la visita",
+            "fecha": "Fecha",
+            "hora": "Hora",
+            "grupo": "Grupo",
+            "abogados": "Abogados",
+            "confirmarVisita": "Confirmar visita",
+            "confirmando": "Confirmando...",
+            "confirmOk": "Visita confirmada correctamente.",
+            "confirmError": "No se ha podido confirmar la visita."
+        },
+        "consultes": {
+            "title": "Consultas",
+            "sidebarTitle": "Tus conversaciones",
+            "threadTitle": "Hilo",
+            "noConversations": "No tienes conversaciones.",
+            "noMessages": "No hay mensajes en esta conversación.",
+            "selectConversation": "Selecciona una conversación.",
+            "newConversation": "Nueva consulta",
+            "startNewHint": "Escribe tu mensaje y envíalo para crear una nueva consulta.",
+            "composerLabel": "Enviar mensaje",
+            "composerPlaceholder": "Escribe tu mensaje…",
+            "send": "Enviar",
+            "sending": "Enviando…",
+            "errorConversations": "No se pudieron cargar las conversaciones.",
+            "errorMessages": "No se pudieron cargar los mensajes.",
+            "errorSend": "No se pudo enviar el mensaje.",
+            "conversation": "Conversación #{{id}}"
+        }
+    },
+    "components": {
+        "factures": {
+            "loading": "Cargando facturas…",
+            "empty": "Sin facturas.",
+            "collapse": "Contraer",
+            "viewcancelled": "Mostrar facturas canceladas"
+        },
+        "expedientsFolders": {
+            "loading": "Cargando carpetas…",
+            "empty": "Sin carpetas.",
+            "collapse": "Contraer",
+            "expand": "Desplegar",
+            "ariaSelectOrToggle": "Seleccionar o desplegar carpeta",
+            "noSelection": "Selecciona una carpeta…",
+            "fallbackHeader": "Carpeta #{{id}}",
+            "courtFallback": "Juzgado #{{id}}",
+            "fields": {
+                "number": "Número:",
+                "name": "Nombre:",
+                "openDate": "Alta:",
+                "group": "Grupo:",
+                "court": "Juzgado:",
+                "office": "Despacho:",
+                "archiveNo": "Nº archivo:",
+                "observations": "Observaciones:",
+                "tutor": "Tutor:"
+            }
+        },
+        "expedientsFolderDetail": {
+            "tabs": {
+                "proc": "Seguimiento procesal",
+                "economic": "Seguimiento económico",
+                "docs": "Documentación"
+            },
+            "economic": {
+                "intro": "Contenido de seguimiento económico (carpeta #{{id}})",
+                "empty": "Sin datos por ahora."
+            },
+            "docs": {
+                "intro": "Documentación asociada (carpeta #{{id}})",
+                "empty": "No hay documentos disponibles."
+            }
+        },
+        "expedientsSeguimentProcesal": {
+            "loading": "Cargando seguimiento…",
+            "empty": "Sin registros.",
+            "fallbackTitle": "Línea #{{id}}"
+        }
+    },
+    "register": {
+        "title_existing": "Alta de usuario",
+        "title_new": "Registro",
+        "title": "Accede",
+        "email": "Correo electrónico",
+        "username": "Nombre de usuario",
+        "password": "Contraseña",
+        "submit": "Registrarse",
+        "introducedni": "Introduce tu NIF/DNI para proceder a crear tu cuenta.",
+        "crearcuenta": "Crear cuenta",
+        "client_only_title": "Ya eres cliente",
+        "client_only_message": "Tu NIF está registrado como cliente, pero aún no tienes acceso como usuario.",
+        "solicitar_acceso": "Solicitar acceso",
+        "not_found_title": "No registrado",
+        "not_found_message": "No hemos encontrado tu NIF. Puedes registrarte para solicitar acceso.",
+        "tooltip_existing": "Revisa tus datos y crea tu contraseña para activar el usuario.",
+        "tooltip_new": "Rellena tus datos para registrarte."
+    },
+    "recover": {
+        "title": "Recuperar cuenta",
+        "email": "Correo electrónico",
+        "submit": "Enviar enlace de recuperación",
+        "sent": "Si el correo está registrado, te hemos enviado un enlace de recuperación."
+    },
+    "login": {
+        "title": "Iniciar sesión",
+        "username": "Nombre de usuario",
+        "email": "E-mail",
+        "password": "Contraseña",
+        "submit": "Acceder",
+        "login_button": "Acceder",
+        "loading": "Accediendo...",
+        "error": "Credenciales incorrectas.",
+        "register_title": "Regístrate",
+        "login_title": "Inicia sesión",
+        "recover_title": "Recuperar cuenta",
+        "recover_submit": "Enviar enlace",
+        "forgot_password": "¿Has olvidado tu contraseña?",
+        "back_to_login": "← Volver ",
+        "tooltip": {
+            "unknown": "Introduce tu DNI para validar si estás registrado.",
+            "client_only": "Eres cliente pero no tienes usuario aún. Solicita acceso.",
+            "client_and_user": "Accede con tu contraseña o recupera el acceso.",
+            "not_found": "No se encontró el DNI. Puedes registrarte si eres nuevo.",
+            "lopd": "Antes de continuar, debes aceptar la política de protección de datos (LOPD). Tus datos se enviarán al aceptarla."
+        }
+    },
+    "identify": {
+        "tooltip": "Introduce tu DNI/NIF para validar si estás registrado."
+    },
+    "lopd": {
+        "title": "Protección de Datos (LOPD)",
+        "description": "Antes de continuar, debes aceptar la política de protección de datos. Tus datos se enviarán al aceptarla.",
+        "long_text": "Texto legal de la LOPD… (incluye aquí el contenido facilitado por el departamento legal).",
+        "accept_label": "He leído y acepto la política de protección de datos.",
+        "accept_and_continue": "Aceptar y enviar",
+        "must_accept": "Debe aceptar la LOPD",
+        "accept_button": "Aceptar LOPD",
+        "tooltip": "Debes aceptar la LOPD para continuar.",
+        "accepted": "LOPD aceptada",
+        "disclaimer_intro": "Para continuar, debes aceptar la política de protección de datos.",
+        "text_1": "Consiento el tratamiento de mis datos personales de acuerdo con la normativa vigente.",
+        "text_2": "He leído la información sobre protección de datos y mis derechos.",
+        "intro": "Estás viendo esta pantalla porque aún no tenemos tu autorización para gestionar tus datos en relación con la LOPD. Te mostramos la información y, si estás de acuerdo, puedes autorizarnos marcando la casilla correspondiente.",
+        "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non lorem a magna efficitur suscipit. Nulla facilisi. Suspendisse finibus malesuada mauris, vitae semper justo sagittis vel. Integer facilisis justo a arcu ultrices, sit amet dignissim risus posuere.",
+        "lorem2": "Aliquam dictum, massa sit amet fringilla viverra, felis nisl dignissim leo, ac ultricies risus nunc id turpis. Phasellus vitae pulvinar nibh, id suscipit odio. Vestibulum id vulputate nisi, ac semper nibh.",
+        "optin_campaigns": "Consiento el envío de campañas",
+        "optin_circulars": "Consiento el envío de circulares",
+        "required": "Debes aceptar para continuar."
+    },
+    "user": {
+        "documentType": "Tipo de documento",
+        "documentNumber": "Número de documento",
+        "firstName": "Nombre",
+        "lastName": "Apellidos",
+        "birthDate": "Fecha de nacimiento",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "phoneLandlinePrefix": "Prefijo fijo",
+        "phoneLandlineNumber": "Teléfono fijo",
+        "phoneMobilePrefix": "Prefijo móvil",
+        "phoneMobileNumber": "Teléfono móvil",
+        "address": "Dirección",
+        "postalCode": "Código postal",
+        "city": "Población",
+        "language": "Idioma de comunicación",
+        "country": "País",
+        "password": "Contraseña",
+        "confirmPassword": "Repetir contraseña",
+        "password_required": "La contraseña es obligatoria.",
+        "confirmPassword_required": "Debe repetir la contraseña.",
+        "password_minlength": "La contraseña debe tener al menos 8 caracteres.",
+        "password_need_letter": "La contraseña debe contener al menos una letra.",
+        "password_need_number": "La contraseña debe contener al menos un número.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "documentType_required": "El tipo de documento es obligatorio.",
+        "documentNumber_required": "El número de documento es obligatorio.",
+        "firstName_required": "El nombre es obligatorio.",
+        "lastName_required": "Los apellidos son obligatorios.",
+        "email_required": "El correo electrónico es obligatorio.",
+        "email_invalid": "El correo electrónico no es válido.",
+        "password_invalid": "Contraseña inválida.",
+        "address_required": "La dirección es obligatoria.",
+        "postalCode_required": "El cp es obligatorio.",
+        "language_required": "El idioma de comunicación es obligatorio.",
+        "passwordchange": "Cambiar contraseña",
+        "change_password": "Cambiar contraseña",
+        "current_password": "Contraseña actual",
+        "new_password": "Nueva contraseña",
+        "city_required": "La población es obligatoria.",
+        "province": "Provincia"
+    },
+    "options": {
+        "documentType": {
+            "DNI": "DNI",
+            "NIF": "NIF",
+            "NIE": "NIE"
+        }
+    },
+    "errors": {
+        "required": "Requerido",
+        "invalidEmail": "Correo electrónico no válido",
+        "passwordsDontMatch": "Las contraseñas no coinciden",
+        "expedients_load": "Error al obtener expedientes ({{status}} {{statusText}}).",
+        "child_folders_load": "Error al obtener carpetas hijas ({{status}} {{statusText}}).",
+        "lsp_load": "Error al obtener el seguimiento procesal ({{status}} {{statusText}}).",
+        "expedients_generic": "Error al cargar expedientes.",
+        "folders_generic": "Error al cargar carpetas.",
+        "lsp_generic": "Error al cargar el seguimiento procesal."
+    },
+    "notFound": {
+        "message": "Página no encontrada",
+        "backToHome": "Volver al inicio"
+    },
+    "menu": {
+        "home": "Inicio",
+        "dashboard": "Panel",
+        "expedients": "Expedientes",
+        "agenda": "Agenda",
+        "facturacio": "Facturación",
+        "visites": "Visitas",
+        "documentacio": "Documentación",
+        "perfil": "Mis datos",
+        "backoffice": "Backoffice",
+        "logout": "Cerrar sesión",
+        "pendents": "Pendientes",
+        "consultes": "Consultes i respostes"
+    },
+    "confirm": {
+        "title": "¿Estás seguro?",
+        "text": "Esta acción no se puede deshacer",
+        "confirmButtonText": "Sí, eliminar",
+        "cancelButtonText": "Cancelar"
+    },
+    "toast": {
+        "success": "Elemento eliminado",
+        "error": "Error al eliminar el elemento"
+    },
+    "table": {
+        "actions": "Acciones",
+        "noresults": "No hay resultados disponibles.",
+        "showingResults": "Mostrando {{count}} de {{total}} resultados",
+        "itemDetails": "Detalles del ítem",
+        "close": "Cerrar",
+        "previous": "Anterior",
+        "next": "Siguiente"
+    },
+    "fileUpload": {
+        "dragAndDrop": "Arrastra tus archivos aquí o haz clic para seleccionar",
+        "uploadValidFiles": "Subir archivos válidos"
+    },
+    "invite": {
+        "title": "Crear usuario",
+        "message": "Recibirás un correo en la dirección asociada a tu cliente para continuar el proceso.",
+        "request": "Solicitar acceso",
+        "sent": "Enlace enviado",
+        "check_email": "Revisa tu bandeja de entrada para continuar.",
+        "error_user_exists": "El usuario ya existe.",
+        "error_user_not_exists": "El usuario no existe.",
+        "tooltip": "Te enviaremos un correo con un enlace para continuar el alta de usuario."
+    },
+    "profile": {
+        "password_changed": "Contraseña actualizada",
+        "settings": "Configuración",
+        "settings_title": "Ajustes de perfil",
+        "settings_placeholder": "Introduce tus preferencias de configuración"
+    },
+    "chat": {
+        "titleBase": "Asistencia / Chat",
+        "fab": "Chat",
+        "openFabLabel": "Abrir chat de asistencia",
+        "minimize": "Minimizar chat",
+        "placeholder": "Escribe un mensaje…",
+        "send": "Enviar",
+        "typing": "Escribiendo…",
+        "greeting": "Hola 👋 En qué puedo ayudarte?",
+        "errorGeneric": "Se ha producido un error generando la respuesta"
+    },
+    "reset": {
+        "title": "Nueva contraseña",
+        "intro": "Introduce y confirma tu nueva contraseña para completar la recuperación.",
+        "new_password": "Nueva contraseña",
+        "repeat_password": "Repite la nueva contraseña",
+        "submit": "Guardar contraseña",
+        "success": "Tu contraseña se ha actualizado correctamente. Ya puedes iniciar sesión.",
+        "error": "No hemos podido actualizar tu contraseña. Inténtalo de nuevo.",
+        "token_invalid": "El enlace ha caducado o no es válido. Solicita uno nuevo desde la pantalla de inicio de sesión.",
+        "back_to_login": "Ir a iniciar sesión"
+    }
+}
