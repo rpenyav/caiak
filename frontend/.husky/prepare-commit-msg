@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+[ -f "$(dirname "$0")/_/husky.sh" ] && . "$(dirname "$0")/_/husky.sh"
+set -e
+
+MSG_FILE="$1"
+SOURCE="$2"   # message|template|merge|squash|commit
+
+# Saltar en rebase/merge/squash
+[ -n "$GIT_REBASE" ] && { echo "→ rebase → skip bump"; exit 0; }
+[ "$SOURCE" = "merge" ] || [ "$SOURCE" = "squash" ] && { echo "→ merge/squash → skip bump"; exit 0; }
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+TARGET_DIR="$REPO_ROOT/frontend"
+[ -f "$TARGET_DIR/package.json" ] || { echo "→ no package.json en frontend → skip bump"; exit 0; }
+
+# Subject (1ª línea, minúsculas)
+SUBJECT="$(sed -n '1p' "$MSG_FILE" | tr '[:upper:]' '[:lower:]' | xargs)"
+echo "→ subject: $SUBJECT"
+echo "→ target:  $TARGET_DIR"
+
+# Mapeo de bump
+DO_BUMP=""
+printf "%s\n" "$SUBJECT" | grep -qE '^[a-z]+(\(.+\))?!:' && DO_BUMP="major"
+grep -qi 'BREAKING CHANGE:' "$MSG_FILE" && DO_BUMP="major"
+[ -z "$DO_BUMP" ] && printf "%s\n" "$SUBJECT" | grep -qE '^feat(\(.+\))?:'        && DO_BUMP="minor"
+[ -z "$DO_BUMP" ] && printf "%s\n" "$SUBJECT" | grep -qE '^feact(\(.+\))?:'       && DO_BUMP="minor"
+[ -z "$DO_BUMP" ] && printf "%s\n" "$SUBJECT" | grep -qE '^(fix|chore)(\(.+\))?:' && DO_BUMP="patch"
+[ -z "$DO_BUMP" ] && { echo "→ no bump"; exit 0; }
+
+echo "→ bump:   $DO_BUMP"
+
+# *** CLAVE: forzar NPM a usar el package.json de frontend ***
+npm --prefix "$TARGET_DIR" version "$DO_BUMP" --no-git-tag-version 1>/dev/null
+
+# Añade cambios al commit
+git add "$TARGET_DIR/package.json"
+for f in package-lock.json yarn.lock pnpm-lock.yaml; do
+  [ -f "$TARGET_DIR/$f" ] && git add "$TARGET_DIR/$f"
+done
+
+echo "→ package.json añadido"
+exit 0
