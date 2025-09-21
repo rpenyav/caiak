@@ -1,7 +1,7 @@
 {
   "name": "caiak",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepare": "husky",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "postinstall": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath frontend/.husky || true"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
