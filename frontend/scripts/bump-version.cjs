@@ -1,14 +1,16 @@
 #!/usr/bin/env node
-/* Bumpea version según el tipo de commit:
-   - breaking change (! o "BREAKING CHANGE") -> major
-   - feat / feact -> minor
-   - fix / chore -> patch
-   Otros tipos -> no bump
-   Se ejecuta en commit-msg y amenda el commit para incluir package.json actualizado.
+/* Bump de versión según mensaje de commit.
+   - feat / feact  -> minor
+   - fix / chore   -> patch
+   - feat! ó BREAKING CHANGE -> major
+   Si no coincide, no bump.
 */
 const fs = require("fs");
 const { execSync } = require("child_process");
 const path = require("path");
+
+// Directorio del package a versionar = carpeta padre de este script (frontend/)
+const PKG_DIR = path.resolve(__dirname, "..");
 
 function readMsg(filePath) {
   try {
@@ -22,7 +24,7 @@ function detectBump(msg) {
   const firstLine = msg.split(/\r?\n/)[0] || "";
   const body = msg;
 
-  // Ignorar merges/reverts automáticos o saltos explícitos
+  // Ignora merges, reverts o marcas para saltar el bump
   if (/^Merge\b|^Revert\b|(\[no\s*bump\]|\[skip\s*bump\])/i.test(firstLine))
     return null;
 
@@ -37,26 +39,16 @@ function detectBump(msg) {
   if (type === "feat" || type === "feact") return "minor";
   if (type === "fix" || type === "chore") return "patch";
 
-  return null; // no bump para docs, refactor, test, etc.
+  return null;
 }
 
-function fileExists(p) {
-  try {
-    fs.accessSync(p);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function stageLockIfExists() {
-  const lockCandidates = ["package-lock.json", "yarn.lock", "pnpm-lock.yaml"];
-  for (const f of lockCandidates) {
-    if (fileExists(path.join(process.cwd(), f))) {
-      try {
-        execSync(`git add ${f}`, { stdio: "ignore" });
-      } catch {}
-    }
+function stageLocks() {
+  for (const f of ["package-lock.json", "yarn.lock", "pnpm-lock.yaml"]) {
+    const p = path.join(PKG_DIR, f);
+    try {
+      fs.accessSync(p);
+      execSync(`git add "${p}"`, { stdio: "ignore" });
+    } catch {}
   }
 }
 
@@ -70,22 +62,29 @@ function stageLockIfExists() {
     return;
   }
 
-  // Usa npm version por su flag --no-git-tag-version (seguro incluso si usas Yarn)
   try {
-    console.log(`[husky:bump] Aplicando bump: ${bump}`);
-    execSync(`npm version ${bump} --no-git-tag-version`, { stdio: "inherit" });
+    console.log(
+      `[husky:bump] Aplicando bump (${bump}) en ${path.join(
+        PKG_DIR,
+        "package.json"
+      )}`
+    );
+    execSync(`npm version ${bump} --no-git-tag-version`, {
+      stdio: "inherit",
+      cwd: PKG_DIR,
+    });
 
-    // Stage de package.json y lock correspondiente
-    execSync("git add package.json", { stdio: "inherit" });
-    stageLockIfExists();
+    execSync(`git add "${path.join(PKG_DIR, "package.json")}"`, {
+      stdio: "inherit",
+    });
+    stageLocks();
 
-    // Amendar sin re-ejecutar hooks
+    // Amenda el commit sin re-ejecutar hooks
     execSync("HUSKY=0 git commit --amend --no-edit --no-verify", {
       stdio: "inherit",
     });
     console.log("[husky:bump] Versión actualizada y commit enmendado.");
   } catch (err) {
     console.error("[husky:bump] Error durante el bump:", err?.message || err);
-    // No abortamos el commit original si falla el bump
   }
 })();
