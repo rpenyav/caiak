@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 1) valida el mensaje
+yarn commitlint --edit "$1" || exit 1
+# 2) bump de versión (amenda el commit con el package actualizado)
+node scripts/bump-version.cjs "$1"
