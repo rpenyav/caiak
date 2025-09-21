@@ -7,6 +7,8 @@ import {
   Query,
   UseGuards,
   BadRequestException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,8 +26,9 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) {
-    return this.usersService.login(loginUserDto);
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginUserDto) {
+    return await this.usersService.login(loginDto);
   }
 
   @Get()

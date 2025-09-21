@@ -1,4 +1,3 @@
-// src/auth/authRepository.ts
 import axios from "axios";
 
 import { SECURITY_BASE_URL } from "@/domain/helpers/env";
@@ -15,22 +14,21 @@ const normalizeToken = (v?: string | null): string | null => {
 };
 
 /**
- * POST {{SERVER_SECURITY}}/api/login_client
- * body: { username, password }
+ * POST {{SERVER_SECURITY}}/api/users/login
+ * body: { email, password }
  * El token viene en el header Authorization (Bearer ...).
  * Devuelve token (sin "Bearer ") o null.
  */
 export const loginRepository = async (
-  username: string,
+  email: string,
   password: string
 ): Promise<string | null> => {
   try {
-    // REAL
     const base = SECURITY_BASE_URL || "";
-    const url = `${base}/api/login_client`;
+    const url = `${base}/users/login`;
     const response = await axios.post(
       url,
-      { username, password },
+      { email, password },
       {
         headers: { "Content-Type": "application/json" },
         validateStatus: () => true, // gestionamos manualmente
@@ -53,6 +51,7 @@ export const loginRepository = async (
       return tokenFromHeader || tokenFromBody || null;
     }
 
+    console.error("Error en la respuesta del servidor:", response.data);
     return null;
   } catch (error) {
     console.error("Error al hacer login:", error);

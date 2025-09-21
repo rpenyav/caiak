@@ -1,36 +1,43 @@
-import { useTranslation } from "react-i18next";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/auth";
 
+declare const __APP_VERSION__: string;
+
 const LoginMini = () => {
+  const currentYear = new Date().getFullYear();
   const { t } = useTranslation();
   const { login } = useAuth();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await login(username, password);
-      setError(null);
+      const success = await login(email, password);
+      if (success) {
+        setError(null);
+      } else {
+        setError(t("login.error"));
+      }
     } catch (err) {
-      setError("Usuario o contraseña incorrectos");
+      setError(t("login.error"));
     }
   };
 
   return (
     <div className="login-form-container">
-      <h3 className="text-center mb-3">Iniciar Sesión</h3>
+      <h3 className="text-center mb-3">{t("login.title")}</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <input
-            type="text"
+            type="email"
             className="form-control form-control-sm"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder={t("login.email")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -38,7 +45,7 @@ const LoginMini = () => {
           <input
             type="password"
             className="form-control form-control-sm"
-            placeholder="Contraseña"
+            placeholder={t("login.password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -50,8 +57,11 @@ const LoginMini = () => {
           </div>
         )}
         <button type="submit" className="btn btn-primary btn-sm w-100">
-          Iniciar Sesión
+          {t("login.submit")}
         </button>
+        <div className="text-center mt-4">
+          <small>{`v${__APP_VERSION__} · ${currentYear}`}</small>
+        </div>
       </form>
     </div>
   );

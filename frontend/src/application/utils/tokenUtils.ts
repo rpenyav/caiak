@@ -1,7 +1,6 @@
-// src/application/utils/tokenUtils.ts
 import Cookies from "js-cookie";
 
-const COOKIE_KEYS = ["access_token", "authentication_token"];
+const COOKIE_KEYS = ["accessToken"];
 
 export function setTokens(rawToken: string) {
   COOKIE_KEYS.forEach((k) =>
@@ -24,11 +23,8 @@ export function clearTokens() {
 
 export function getStoredToken(): string | null {
   try {
-    const cookieToken =
-      Cookies.get("access_token") || Cookies.get("authentication_token");
-    const lsToken =
-      localStorage.getItem("access_token") ||
-      localStorage.getItem("authentication_token");
+    const cookieToken = Cookies.get("accessToken");
+    const lsToken = localStorage.getItem("accessToken");
     return cookieToken || lsToken || null;
   } catch {
     return null;

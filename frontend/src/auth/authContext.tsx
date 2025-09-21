@@ -1,4 +1,3 @@
-// src/auth/authContext.tsx
 import {
   createContext,
   useContext,
@@ -44,11 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const login = async (
-    username: string,
-    password: string
-  ): Promise<boolean> => {
-    const ok = await loginService(username, password);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    const ok = await loginService(email, password);
     const t = getToken();
     setToken(t);
     setIsAuthenticated(!!t);

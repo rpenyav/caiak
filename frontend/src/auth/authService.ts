@@ -1,50 +1,26 @@
-// src/auth/authService.ts
-import Cookies from "js-cookie";
 import { loginRepository } from "./authRepository";
 import {
-  setTokens,
   clearTokens,
+  setTokens,
   getStoredToken,
 } from "@/application/utils/tokenUtils";
-
-/** Claves de artefactos de invitación que debemos limpiar */
-const INVITE_KEYS = [
-  "invite_token",
-  "invite_dto",
-  "invite_lang",
-  "invite_tercero_id",
-] as const;
 
 /** Limpia tokens (cookies + LS) y artefactos de invitación */
 export function clearAuthAndInvite() {
   try {
     clearTokens();
-    INVITE_KEYS.forEach((k) => localStorage.removeItem(k));
   } catch {
     /* no-op */
   }
 }
 
-/** LOGIN real: pega al backend, guarda token si llega en Authorization */
-export async function login(
-  username: string,
-  password: string
-): Promise<boolean> {
-  const rawToken = await loginRepository(username, password);
-  const isHttps =
-    typeof window !== "undefined" && window.location.protocol === "https:";
-
-  if (rawToken) {
-    setTokens(rawToken); // cookies + LS + evento
-    Cookies.set("access_token", rawToken, {
-      secure: isHttps,
-      sameSite: "Lax",
-      path: "/",
-    });
-    window.dispatchEvent(new Event("auth:token"));
+/** LOGIN: hace la llamada al repositorio y almacena el token */
+export async function login(email: string, password: string): Promise<boolean> {
+  const token = await loginRepository(email, password);
+  if (token) {
+    setTokens(token);
     return true;
   }
-
   return false;
 }
 
