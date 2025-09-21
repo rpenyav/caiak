@@ -36,3 +36,5 @@
 export { default as Chatbot } from "./Chatbot";
 export { default as ChatBubble } from "./ChatBubble";
 // export { default as LoaderDots } from "./LoaderDots";
+export { default as LoginMini } from "./forms/LoginMini";
+export { default as LoginDesktop } from "./forms/LoginDesktop";

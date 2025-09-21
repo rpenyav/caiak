@@ -33,7 +33,7 @@ const Layout = ({ children }: LayoutProps) => {
       )}
       {chatMode === "desktop" && (
         <>
-          <Header />
+          {isAuthenticated && <Header />}
           <Main>{children}</Main>
           <Footer />
         </>
