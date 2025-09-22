@@ -1,3 +1,4 @@
+// dto/create-conversation.dto.ts
 import { IsString, IsArray, IsOptional } from 'class-validator';
 
 export class CreateConversationDto {

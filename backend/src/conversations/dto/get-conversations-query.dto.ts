@@ -1,3 +1,4 @@
+// dto/get-conversations-query.dto.ts
 import { IsOptional, IsInt, Min, IsString, IsIn } from 'class-validator';
 
 export class GetConversationsQueryDto {

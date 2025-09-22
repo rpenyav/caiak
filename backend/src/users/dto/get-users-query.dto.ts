@@ -20,7 +20,7 @@ export class GetUsersQueryDto {
 
   @IsString()
   @IsOptional()
-  @IsIn(['username', 'createdAt', 'updatedAt'])
+  @IsIn(['email', 'createdAt', 'updatedAt'])
   @Transform(({ value }: TransformFnParams) => value || 'createdAt')
   sortBy: string = 'createdAt';
 

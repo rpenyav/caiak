@@ -1,5 +1,5 @@
+// authRepository.ts
 import axios from "axios";
-
 import { SECURITY_BASE_URL } from "@/domain/helpers/env";
 
 const stripBearer = (v?: string | null): string | null =>
@@ -13,12 +13,6 @@ const normalizeToken = (v?: string | null): string | null => {
   return s;
 };
 
-/**
- * POST {{SERVER_SECURITY}}/api/users/login
- * body: { email, password }
- * El token viene en el header Authorization (Bearer ...).
- * Devuelve token (sin "Bearer ") o null.
- */
 export const loginRepository = async (
   email: string,
   password: string
@@ -26,29 +20,33 @@ export const loginRepository = async (
   try {
     const base = SECURITY_BASE_URL || "";
     const url = `${base}/users/login`;
+
     const response = await axios.post(
       url,
       { email, password },
       {
         headers: { "Content-Type": "application/json" },
-        validateStatus: () => true, // gestionamos manualmente
+        validateStatus: () => true,
       }
     );
 
     if (response.status >= 200 && response.status < 300) {
-      // Necesitas Access-Control-Expose-Headers: Authorization en backend
+      const headers = response.headers || {};
       const authHeader =
-        (response.headers && (response.headers["authorization"] as string)) ||
-        (response.headers && (response.headers["Authorization"] as string));
+        (headers["authorization"] as string) ??
+        (headers["Authorization"] as string);
 
-      // Fallback temporal por si backend también lo devuelve en body: { token: "Bearer ..." }
-      const bodyToken: string | undefined =
-        (response.data && response.data.token) || undefined;
+      const body = response.data || {};
+      const candidates = [
+        stripBearer(authHeader),
+        stripBearer(body.token),
+        stripBearer(body.accessToken),
+        stripBearer(body.access_token),
+      ]
+        .map(normalizeToken)
+        .filter(Boolean) as string[];
 
-      const tokenFromHeader = normalizeToken(stripBearer(authHeader));
-      const tokenFromBody = normalizeToken(stripBearer(bodyToken));
-
-      return tokenFromHeader || tokenFromBody || null;
+      return candidates[0] ?? null;
     }
 
     console.error("Error en la respuesta del servidor:", response.data);

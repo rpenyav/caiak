@@ -1,4 +1,6 @@
 import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/auth";
@@ -8,17 +10,19 @@ declare const __APP_VERSION__: string;
 const LoginMini = () => {
   const currentYear = new Date().getFullYear();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const success = await login(email, password);
+      const success = await login(username, password);
       if (success) {
         setError(null);
+        navigate("/");
       } else {
         setError(t("login.error"));
       }
@@ -35,9 +39,9 @@ const LoginMini = () => {
           <input
             type="email"
             className="form-control form-control-sm"
-            placeholder={t("login.email")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("login.username")}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>

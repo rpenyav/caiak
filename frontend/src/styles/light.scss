@@ -1,0 +1,10 @@
+.header-custom {
+  display: flex;
+  width: 100%;
+  height: 57px;
+  padding: var(--sds-size-space-800) var(--sds-size-space-800)
+    var(--sds-size-space-4000) var(--sds-size-space-800);
+  align-items: flex-start;
+  gap: 16px var(--sds-size-space-400);
+  flex-wrap: wrap;
+}

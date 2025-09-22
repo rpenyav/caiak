@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import pkg from "./package.json";
 import path from "path";
 import dts from "vite-plugin-dts";
+import sass from "sass"; // Asegúrate de instalarlo
 
 export default defineConfig({
   plugins: [
@@ -15,6 +16,14 @@ export default defineConfig({
       insertTypesEntry: true,
       outDir: "dist",
     }),
+    {
+      name: "sass",
+      transform(code, id) {
+        if (id.endsWith(".scss")) {
+          return sass.compileString(code, { sourceMap: true }).css;
+        }
+      },
+    },
   ],
   resolve: {
     alias: {
@@ -29,9 +38,12 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         quietDeps: true,
+        // 👇 salto de línea al final para no “pegarse” con la primera línea del .scss
+        additionalData: `@use "@/styles/variables.scss" as *;\n`,
       },
     },
   },
+
   server: {
     host: "0.0.0.0",
     port: 3004,

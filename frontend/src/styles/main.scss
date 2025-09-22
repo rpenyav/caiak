@@ -1,26 +1,22 @@
 @use "bootstrap/scss/bootstrap" as *;
-@use "./components.scss";
 @use "./login.scss";
-@use "./navbar.scss";
-@use "./masonry.scss";
-@use "./cards.scss";
-@use "./pages.scss";
-@use "./calendar.scss";
-@use "./chat.scss";
 @use "./layout.scss";
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@use "./menu.scss";
+@use "./dark.scss"; // @use "./light.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 html {
-  scrollbar-gutter: stable;
 }
 
 html,
 body {
-  font-family: "Noto Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
+  font-family: "Open Sans", sans-serif;
+
   font-style: normal;
-  font-size: 13px;
+
+  padding: 0px;
+  margin: 0px;
   font-variation-settings: "wdth" 100;
 }
 
@@ -50,6 +46,16 @@ body {
   }
 }
 
-.bg-custom-primary {
-  background-color: #970c1f !important;
+.custom-input-flat {
+  border-radius: 0 !important; // Quita los bordes redondeados
+  background-color: #ebedf0 !important; // Color de fondo especificado
+}
+
+// Aplica la clase a form-control y form-select
+.form-control.custom-input-flat,
+.form-select.custom-input-flat {
+  border-radius: 0 !important;
+  padding: 6px;
+  font-size: 13px;
+  background-color: #ebedf0 !important;
 }

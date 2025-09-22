@@ -1,3 +1,5 @@
+@use "./variables.scss" as *;
+
 .login-form-container {
   padding: 15px;
   display: flex;
@@ -40,9 +42,12 @@
 
 .login-desktop-card {
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  height: 302px;
+  max-width: 620px;
+  border-radius: 15px;
+  border: 1px solid #d9d9d9;
+  background: #fcfcfc;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
 
   .card-body {
     padding: 30px;
@@ -72,4 +77,32 @@
 
 .login-desktop-form {
   width: 100%;
+  flex-grow: 1; // Permite que el formulario crezca para llenar el espacio
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // Centra verticalmente los elementos internos
+}
+
+.mini-text-login {
+  color: $color-graymarine;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 15px; /* 12.6px */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1; // Asegura que esté sobre el input
+
+  &:hover {
+    opacity: 0.8; // Efecto hover sutil
+  }
 }

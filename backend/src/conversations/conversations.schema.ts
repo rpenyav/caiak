@@ -16,6 +16,14 @@ export class Conversation {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Message' }], default: [] })
   messages: Types.ObjectId[];
+
+  // usuario creador
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
+  createdBy: Types.ObjectId;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);
+
+// 👇 Índices útiles (compuestos) para acelerar consultas habituales
+ConversationSchema.index({ workspaceSlug: 1, createdBy: 1, createdAt: -1 });
+ConversationSchema.index({ createdBy: 1, createdAt: -1 });

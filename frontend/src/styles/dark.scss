@@ -1,0 +1,149 @@
+@use "./variables.scss" as *;
+
+.main-custom {
+}
+.header-custom {
+  display: flex;
+  width: 100%;
+  height: 57px;
+  padding-top: 11px;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-bottom: 14px;
+  align-items: center;
+
+  border-bottom: 1px solid $color-white;
+  flex-wrap: wrap;
+  background-color: $color-graymarine;
+}
+
+.footer-custom {
+  border-top: 1px solid $color-white;
+  background-color: $color-graymarine;
+}
+
+body {
+  background-color: $color-marine;
+}
+
+.divider-left-white {
+  border-left: 1px solid white;
+  height: 33px;
+  margin-left: 12px;
+  padding-left: 4px;
+}
+
+.text-block-dark {
+  color: $color-white; // Usa el secundario #6B7280
+
+  text-align: left;
+  padding: 0 10px;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 140%; /* 15.4px */
+}
+
+.nav-link-custom {
+  color: $color-white;
+  text-decoration: none;
+  font-weight: lighter;
+  &:hover {
+    color: $color-yellow; // Cambio al terciario en hover
+    text-decoration: underline;
+  }
+}
+
+.login-link-custom {
+  font-size: 12px;
+  color: $color-marine;
+  text-decoration: none;
+  font-weight: lighter;
+  &:hover {
+    color: $color-graymarine; // Cambio al terciario en hover
+    text-decoration: underline;
+  }
+}
+
+.btn-send {
+  background-color: $color-graymarine; // Fondo gris fuerte
+  border-radius: 0 !important; // Quita bordes redondeados
+  padding: 6px !important; // Padding fijo de 6px
+  width: 100%; // Mantiene el ancho completo si se usa w-100
+  color: $color-white !important; // Texto blanco para contraste
+  border: none !important; // Elimina bordes por defecto
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 140%; /* 19.6px */
+
+  &:hover {
+    background-color: darken(#6b7280, 10%); // Oscurece un 10% en hover
+    color: $color-white !important;
+  }
+
+  &:focus {
+    box-shadow: none !important; // Elimina el foco predeterminado de Bootstrap
+    outline: none !important;
+  }
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    opacity: 0.8; // Opcional: sutil efecto de hover en el botón
+  }
+
+  &:focus {
+    outline: none; // Elimina contorno por defecto
+  }
+}
+
+/* estilos globales o del header */
+.icon-hover {
+  /* el fill del trazo lo toma de la variable */
+  fill: var(--icon-color, currentColor);
+  transition: fill 0.15s ease-in-out;
+}
+
+/* al hacer hover sobre el botón, cambiamos el fill del SVG interno */
+.logout-button:hover .icon-hover {
+  fill: var(--icon-hover-color, var(--icon-color, currentColor));
+}
+
+.no-workspaces {
+  color: $color-white;
+  padding: 20px;
+  text-align: center;
+}
+
+.menu-item-workspaces {
+  color: $color-white;
+  .menu-icon {
+  }
+  .menu-label {
+  }
+  .menu-shortcut {
+  }
+  .menu-description {
+  }
+}
+
+.menu-item-conversations {
+  color: $color-white;
+  .menu-icon {
+  }
+  .menu-label {
+  }
+  .menu-shortcut {
+  }
+  .menu-description {
+  }
+}

@@ -38,3 +38,21 @@ export { default as ChatBubble } from "./ChatBubble";
 // export { default as LoaderDots } from "./LoaderDots";
 export { default as LoginMini } from "./forms/LoginMini";
 export { default as LoginDesktop } from "./forms/LoginDesktop";
+export { default as LogoCaiak } from "./LogoCaiak";
+export { default as SidebarSearch } from "./SidebarSearch";
+export { default as SidebarList } from "./SidebarList";
+export { default as AvatarComponent } from "./AvatarComponent";
+export { default as IconGlass } from "./icons/IconGlass";
+
+export { default as IconOpenEye } from "./icons/IconOpenEye";
+export { default as IconCloseEye } from "./icons/IconCloseEye";
+export { default as IconLogout } from "./icons/IconLogout";
+export { default as IconFolder } from "./icons/IconFolder";
+export { default as LoaderSmall } from "./LoaderSmall";
+export { default as IconLeftCaret } from "./icons/IconLeftCaret";
+export { default as IconRightCaret } from "./icons/IconRightCaret";
+export { default as IconUpCaret } from "./icons/IconUpCaret";
+export { default as IconDownCaret } from "./icons/IconDownCaret";
+export { default as IconMinus } from "./icons/IconMinus";
+
+export { default as IconDialog } from "./icons/IconDialog";

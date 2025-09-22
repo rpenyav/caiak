@@ -1,40 +1,63 @@
+// src/routes/AppRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Suspense, lazy } from "react";
-import PrivateRoute from "./PrivateRoute";
-import { useAuth } from "@/auth";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import Layout from "@/ui/layout/Layout";
+import { getStoredToken } from "@/application/utils/tokenUtils";
+import PrivateRoute from "./PrivateRoute";
 
-// Páginas
 const LoginPage = lazy(() => import("@/ui/pages/LoginPage"));
 const DashboardPage = lazy(() => import("@/ui/pages/DashboardPage"));
 const PerfilPage = lazy(() => import("@/ui/pages/PerfilPage"));
 const NotFoundPage = lazy(() => import("@/ui/pages/NotFoundPage"));
 
 const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const bump = () => setTick((n) => n + 1);
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") bump();
+    };
+
+    const onAuthToken = () => bump();
+    const onAuthExpired = () => bump();
+
+    window.addEventListener("auth:token", onAuthToken);
+    window.addEventListener("auth:expired", onAuthExpired as EventListener);
+    window.addEventListener("focus", bump);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.removeEventListener("auth:token", onAuthToken);
+      window.removeEventListener(
+        "auth:expired",
+        onAuthExpired as EventListener
+      );
+      window.removeEventListener("focus", bump);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
+  const hasToken = !!getStoredToken();
 
   return (
     <>
-      <Toaster position="top-right" />
-      <Suspense fallback={<div className="text-center p-5">Cargando...</div>}>
+      <Toaster />
+      <Suspense>
         <Routes>
-          {/* Redirección raíz */}
           <Route
             path="/"
             element={
-              <Navigate
-                to={isAuthenticated ? "/dashboard" : "/login"}
-                replace
-              />
+              <Navigate to={hasToken ? "/dashboard" : "/login"} replace />
             }
           />
 
-          {/* Login */}
           <Route
             path="/login"
             element={
-              isAuthenticated ? (
+              hasToken ? (
                 <Navigate to="/dashboard" replace />
               ) : (
                 <Layout>
@@ -44,7 +67,6 @@ const AppRoutes = () => {
             }
           />
 
-          {/* Rutas protegidas dentro del layout */}
           <Route
             path="/dashboard"
             element={
@@ -67,7 +89,6 @@ const AppRoutes = () => {
             }
           />
 
-          {/* Página no encontrada */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

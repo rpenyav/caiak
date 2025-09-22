@@ -1,3 +1,4 @@
+// src/conversations/conversations.controller.ts
 import {
   Controller,
   Post,
@@ -14,6 +15,7 @@ import { CreateConversationDto } from './dto/create-conversation.dto';
 import { GetConversationsQueryDto } from './dto/get-conversations-query.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
+import { UserId } from '../auth/user-id.decorator';
 
 @Controller('conversations')
 @UseGuards(JwtAuthGuard)
@@ -22,18 +24,23 @@ export class ConversationsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  async create(@Body() createConversationDto: CreateConversationDto) {
+  async create(@Body() dto: CreateConversationDto, @UserId() userId: string) {
     try {
-      return await this.conversationsService.create(createConversationDto);
+      if (!userId) throw new BadRequestException('Usuario no autenticado');
+      return await this.conversationsService.create(dto, userId);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
   @Get()
-  async findAll(@Query() query: GetConversationsQueryDto) {
+  async findAll(
+    @Query() query: GetConversationsQueryDto,
+    @UserId() userId: string,
+  ) {
     try {
-      return await this.conversationsService.findAll(query);
+      if (!userId) throw new BadRequestException('Usuario no autenticado');
+      return await this.conversationsService.findAll(query, userId);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -41,18 +48,26 @@ export class ConversationsController {
 
   @Get('workspace/:workspaceSlug')
   @UseGuards(RolesGuard)
-  async findAllByWorkspace(@Param('workspaceSlug') workspaceSlug: string) {
+  async findAllByWorkspace(
+    @Param('workspaceSlug') workspaceSlug: string,
+    @UserId() userId: string,
+  ) {
     try {
-      return await this.conversationsService.findAllByWorkspace(workspaceSlug);
+      if (!userId) throw new BadRequestException('Usuario no autenticado');
+      return await this.conversationsService.findAllByWorkspace(
+        workspaceSlug,
+        userId,
+      );
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById(@Param('id') id: string, @UserId() userId: string) {
     try {
-      return await this.conversationsService.findById(id);
+      if (!userId) throw new BadRequestException('Usuario no autenticado');
+      return await this.conversationsService.findById(id, userId);
     } catch (error) {
       throw new NotFoundException(error.message);
     }

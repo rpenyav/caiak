@@ -4,11 +4,22 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, SortOrder } from 'mongoose';
+import { Model, SortOrder, Types } from 'mongoose';
 import { Conversation, ConversationDocument } from './conversations.schema';
 import { CreateConversationDto } from './dto/create-conversation.dto';
 import { GetConversationsQueryDto } from './dto/get-conversations-query.dto';
 import { WorkspacesService } from '../workspaces/workspaces.service';
+
+// helper para filtro de createdBy que acepte string u ObjectId
+function buildCreatedByFilter(userId: string) {
+  const isValid = Types.ObjectId.isValid(userId);
+  if (isValid) {
+    const oid = new Types.ObjectId(userId);
+    // Admitimos que en BD haya docs antiguos con string o nuevos con ObjectId
+    return { $in: [oid, userId] };
+  }
+  return userId; // solo string
+}
 
 @Injectable()
 export class ConversationsService {
@@ -20,8 +31,8 @@ export class ConversationsService {
 
   async create(
     createConversationDto: CreateConversationDto,
+    userId: string, // <- se mantiene para asegurar createdBy
   ): Promise<Conversation> {
-    // Validar que el workspaceSlug exista
     const workspace = await this.workspacesService.findBySlug(
       createConversationDto.workspaceSlug,
     );
@@ -31,11 +42,18 @@ export class ConversationsService {
       );
     }
 
-    const newConversation = new this.conversationModel(createConversationDto);
+    const newConversation = new this.conversationModel({
+      ...createConversationDto,
+      createdBy: new Types.ObjectId(userId),
+    });
+
     return newConversation.save();
   }
 
-  async findAll(query: GetConversationsQueryDto): Promise<{
+  async findAll(
+    query: GetConversationsQueryDto,
+    userId: string, // <- endpoints HTTP siguen pasando userId
+  ): Promise<{
     pageSize: number;
     pageNumber: number;
     sortBy: string;
@@ -55,25 +73,23 @@ export class ConversationsService {
       [sortBy]: sortDirection as SortOrder,
     };
 
-    // Validar sortBy
     if (!['name', 'createdAt', 'updatedAt'].includes(sortBy)) {
       throw new BadRequestException(
         `Campo de ordenamiento inválido: ${sortBy}`,
       );
     }
 
-    // Obtener la lista paginada
-    const list = await this.conversationModel
-      .find()
-      .skip(skip)
-      .limit(pageSize)
-      .sort(sort)
-      .exec();
+    const filter = { createdBy: buildCreatedByFilter(userId) };
 
-    // Contar el total de documentos
-    const numberOfResults = await this.conversationModel
-      .countDocuments()
-      .exec();
+    const [list, numberOfResults] = await Promise.all([
+      this.conversationModel
+        .find(filter)
+        .skip(skip)
+        .limit(pageSize)
+        .sort(sort)
+        .exec(),
+      this.conversationModel.countDocuments(filter).exec(),
+    ]);
 
     return {
       pageSize,
@@ -85,8 +101,10 @@ export class ConversationsService {
     };
   }
 
-  async findAllByWorkspace(workspaceSlug: string): Promise<Conversation[]> {
-    // Validar que el workspaceSlug exista
+  async findAllByWorkspace(
+    workspaceSlug: string,
+    userId: string,
+  ): Promise<Conversation[]> {
     const workspace = await this.workspacesService.findBySlug(workspaceSlug);
     if (!workspace) {
       throw new BadRequestException(
@@ -94,13 +112,27 @@ export class ConversationsService {
       );
     }
 
-    return this.conversationModel.find({ workspaceSlug }).exec();
+    return this.conversationModel
+      .find({
+        workspaceSlug,
+        createdBy: buildCreatedByFilter(userId),
+      })
+      .exec();
   }
 
-  async findById(id: string): Promise<Conversation> {
-    const conversation = await this.conversationModel.findById(id).exec();
+  // userId es OPCIONAL para no romper callers internos existentes
+  async findById(id: string, userId?: string): Promise<Conversation> {
+    const baseFilter: any = { _id: new Types.ObjectId(id) };
+    if (userId) {
+      baseFilter.createdBy = buildCreatedByFilter(userId);
+    }
+
+    const conversation = await this.conversationModel
+      .findOne(baseFilter)
+      .exec();
+
     if (!conversation) {
-      throw new NotFoundException(`Conversación con ID "${id}" no encontrada`);
+      throw new NotFoundException(`Conversación no encontrada`);
     }
     return conversation;
   }

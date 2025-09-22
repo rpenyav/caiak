@@ -7,6 +7,11 @@ import AppRoutes from "./routes/AppRoutes";
 import "./styles/main.scss";
 import "./i18n/i18n";
 import { AuthProvider } from "./auth";
+import {
+  ConversationsProvider,
+  UserProvider,
+  WorkspaceProvider,
+} from "./application/contexts";
 // import {
 //   ExpedientsProvider,
 //   FacturacioProvider,
@@ -17,13 +22,19 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        {/* <UserProvider>
+        <UserProvider>
+          <WorkspaceProvider>
+            <ConversationsProvider>
+              {/* <UserProvider>
           <ExpedientsProvider>
             <FacturacioProvider> */}
-        <AppRoutes />
-        {/* </FacturacioProvider>
+              <AppRoutes />
+              {/* </FacturacioProvider>
           </ExpedientsProvider>
         </UserProvider>*/}
+            </ConversationsProvider>
+          </WorkspaceProvider>
+        </UserProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

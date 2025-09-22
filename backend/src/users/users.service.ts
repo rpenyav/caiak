@@ -21,19 +21,19 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { username, password, roles } = createUserDto;
+    const { email, password, roles } = createUserDto;
 
-    // Verificar si el username ya existe
-    const existingUser = await this.userModel.findOne({ username }).exec();
+    // Verificar si el email ya existe
+    const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
-      throw new BadRequestException('El username ya está registrado');
+      throw new BadRequestException('El email ya está registrado');
     }
 
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new this.userModel({
-      username,
+      email,
       password: hashedPassword,
       roles: roles || [],
     });
@@ -42,10 +42,10 @@ export class UsersService {
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
-    const { username, password } = loginUserDto;
+    const { email, password } = loginUserDto;
 
-    // Buscar usuario por username
-    const user = await this.userModel.findOne({ username }).exec();
+    // Buscar usuario por email
+    const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -58,18 +58,18 @@ export class UsersService {
 
     // Generar token JWT con appId
     const payload = {
-      username: user.username,
+      email: user.email,
       sub: user._id,
       roles: user.roles,
-      appId: 'caiak-app-1',
+      appId: 'caiak-app-1', // Añadir appId al payload
     };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
   }
 
-  async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await this.userModel.findOne({ username }).exec();
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       return null;
     }
@@ -82,8 +82,8 @@ export class UsersService {
     return user;
   }
 
-  async findByUsername(username: string): Promise<User | null> {
-    return this.userModel.findOne({ username }).exec();
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async findAll(query: GetUsersQueryDto): Promise<{
@@ -107,7 +107,7 @@ export class UsersService {
     };
 
     // Validar sortBy
-    if (!['username', 'createdAt', 'updatedAt'].includes(sortBy)) {
+    if (!['email', 'createdAt', 'updatedAt'].includes(sortBy)) {
       throw new BadRequestException(
         `Campo de ordenamiento inválido: ${sortBy}`,
       );

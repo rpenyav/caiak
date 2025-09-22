@@ -19,5 +19,5 @@ export const USE_MOCK_LOGIN = toBool(import.meta.env.VITE_USE_MOCK_LOGIN);
 
 // Nombre de cookie para el access token
 export const ACCESS_TOKEN_COOKIE = String(
-  import.meta.env.VITE_ACCESS_TOKEN_COOKIE || "access_token"
+  import.meta.env.VITE_ACCESS_TOKEN_COOKIE || "accessToken"
 );

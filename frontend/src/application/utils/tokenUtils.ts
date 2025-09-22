@@ -1,32 +1,23 @@
+// src/application/utils/tokenUtils.ts
 import Cookies from "js-cookie";
 
-const COOKIE_KEYS = ["accessToken"];
+const COOKIE_KEY = "accessToken";
 
 export function setTokens(rawToken: string) {
-  COOKIE_KEYS.forEach((k) =>
-    Cookies.set(k, rawToken, { expires: 7, sameSite: "lax", path: "/" })
-  );
-  try {
-    COOKIE_KEYS.forEach((k) => localStorage.setItem(k, rawToken));
-  } catch {}
+  Cookies.set(COOKIE_KEY, rawToken, {
+    expires: 7,
+    sameSite: "lax",
+    path: "/",
+    ...(window.location.protocol === "https:" ? { secure: true } : {}),
+  });
   window.dispatchEvent(new Event("auth:token"));
 }
 
 export function clearTokens() {
-  COOKIE_KEYS.forEach((k) => Cookies.remove(k, { path: "/" }));
-  try {
-    COOKIE_KEYS.forEach((k) => localStorage.removeItem(k));
-  } catch {}
-
+  Cookies.remove(COOKIE_KEY, { path: "/" });
   window.dispatchEvent(new Event("auth:token"));
 }
 
 export function getStoredToken(): string | null {
-  try {
-    const cookieToken = Cookies.get("accessToken");
-    const lsToken = localStorage.getItem("accessToken");
-    return cookieToken || lsToken || null;
-  } catch {
-    return null;
-  }
+  return Cookies.get(COOKIE_KEY) ?? null;
 }
