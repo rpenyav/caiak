@@ -1,0 +1,164 @@
+@use "./variables.scss" as *;
+
+.menu {
+  width: 100%;
+  background-color: $color-marine;
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &-separator {
+    height: 1px;
+    background-color: $color-white;
+    margin: 10px 0;
+  }
+
+  /* Item genérico (p. ej. loaders) */
+  &-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: $color-white;
+  }
+
+  /* Sublista (contenedor de conversaciones) */
+  &-sublist {
+    margin-left: 12px; // además de tu "ms-3" si lo mantienes
+  }
+
+  /* Botón de workspace en rejilla */
+  &-item-workspaces {
+    display: grid;
+    grid-template-columns: 24px 1fr auto; /* icon | nombre | caret */
+    grid-auto-rows: auto;
+    column-gap: 10px;
+    row-gap: 6px;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+
+    background: transparent;
+    border: 0;
+    padding: 8px 12px;
+    cursor: pointer;
+
+    .menu-icon {
+      grid-column: 1;
+      margin-top: -4px;
+    }
+    .menu-label {
+      grid-column: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .menu-shortcut {
+      grid-column: 3;
+      justify-self: end;
+    }
+
+    .menu-description {
+      grid-column: 1 / -1; /* ocupa todo el ancho */
+      padding-top: 10px;
+      font-size: 0.85rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+  }
+
+  /* Estado no expandible */
+  &-item-workspaces[style*="cursor: default"] {
+    opacity: 0.9;
+  }
+
+  /* Conversaciones (2 filas: título y fecha) */
+  &-item-conversations {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 8px 12px;
+    color: $color-white;
+
+    .menu-icon {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .menu-label {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .menu-shortcut {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      font-size: 12px;
+      color: $color-yellow;
+      margin-left: 38px;
+    }
+
+    &:hover {
+      background-color: $color-graymarine;
+      cursor: pointer;
+    }
+  }
+
+  /* Contenedor scrollable del sidebar */
+  &--scrollable {
+    max-height: 58vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable both-edges;
+    overscroll-behavior: contain;
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: $color-marine rgba(255, 255, 255, 0.12);
+
+    /* WebKit */
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      transition: background-color 120ms ease;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: $color-marine;
+    }
+    &::-webkit-scrollbar-thumb:active {
+      background-color: $color-marine;
+    }
+
+    /* Fade sutil arriba/abajo */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 12px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 12px),
+      transparent 100%
+    );
+  }
+}

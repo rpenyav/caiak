@@ -1,9 +1,10 @@
 @use "bootstrap/scss/bootstrap" as *;
 @use "./login.scss";
 @use "./layout.scss";
-@use "./menu.scss";
+// @use "./menu.scss";
 @use "./dark.scss"; // @use "./light.scss";
-
+@use "./sidebar-menu.scss";
+@use "./sidebar-mini.scss";
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 html {

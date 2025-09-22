@@ -1,6 +1,7 @@
+// src/ui/layout/ChatMiniContainer.tsx
 import type { ReactNode } from "react";
-import Header from "./Header";
 import HeaderMini from "./HeaderMini";
+import { MiniNavigation } from "../components";
 
 const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
 const chatMiniWidth = Number(import.meta.env.VITE_CHAT_MINI_WIDTH);
@@ -27,7 +28,11 @@ const ChatMiniContainer = ({ children, onMinimize, onClose }: CCProps) => {
     >
       <HeaderMini mode={chatMode} onMinimize={onMinimize} onClose={onClose} />
 
-      <div className="chat-content p-3 flex-grow-1">{children}</div>
+      {/* 👇 Drawer y contenido viven dentro de chat-content */}
+      <div className="chat-content  flex-grow-1 ">
+        <MiniNavigation />
+        {children}
+      </div>
     </div>
   );
 };

@@ -1,154 +1,164 @@
 @use "./variables.scss" as *;
 
-.menu {
-  width: 100%;
-  background-color: $color-marine; // Fondo azul primario
-  padding: 10px 0;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  .menu-separator {
-    height: 1px;
-    background-color: $color-white;
-    margin: 10px 0;
-  }
-
-  /* Botón de workspace como rejilla: icon | label | shortcut + descripción abajo */
-  .menu-item-workspaces {
-    display: grid;
-    grid-template-columns: 24px 1fr auto; /* icono | nombre | flecha/estado */
-    grid-auto-rows: auto;
-    column-gap: 10px;
-    row-gap: 6px;
-    align-items: center;
+/* DRY: genera estilos para 'menu' y 'menu-mini' */
+@mixin build-menu($ns) {
+  .#{$ns} {
     width: 100%;
-    text-align: left;
-
-    /* reseteo básico del botón (opcional, por si no lo tienes ya) */
-    background: transparent;
-    border: 0;
-    padding: 8px 12px;
-    cursor: pointer;
-
-    /* Colocación explícita de cada parte en la fila superior */
-    .menu-icon {
-      grid-column: 1;
-      margin-top: -4px;
-    }
-    .menu-label {
-      grid-column: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .menu-shortcut {
-      grid-column: 3;
-      justify-self: end;
-    }
-
-    /* 👇 La descripción ocupa la fila siguiente y todo el ancho */
-    .menu-description {
-      grid-column: 1 / -1; /* span across all columns */
-
-      padding-top: 10px;
-      font-size: 0.85rem;
-      text-align: center;
-      opacity: 0.85; /* úsalo a tu gusto */
-    }
-  }
-
-  /* Opcional: estado deshabilitado/“no expandible” */
-  .menu-item-workspaces[style*="cursor: default"] {
-    opacity: 0.9;
-  }
-
-  .menu-item-conversations {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 8px;
-    row-gap: 4px;
-    align-items: center;
-    padding: 8px 12px;
-    color: $color-white;
-
-    .menu-icon {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .menu-label {
-      grid-column: 2;
-      grid-row: 1;
-      font-size: 14px;
-      font-weight: 500;
-      margin-left: 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .menu-shortcut {
-      grid-column: 1 / -1;
-      grid-row: 2;
-      font-size: 12px;
-      color: $color-yellow;
-      margin-left: 38px;
-    }
-
-    &:hover {
-      background-color: $color-graymarine;
-      cursor: pointer;
-    }
-  }
-}
-
-/* Contenedor scrollable del sidebar */
-.menu--scrollable {
-  max-height: 58vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* suaviza en iOS */
-  scrollbar-gutter: stable both-edges; /* evita saltos de layout con la barra */
-  overscroll-behavior: contain; /* evita “rebotar” el body al final */
-
-  /* Firefox */
-  scrollbar-width: thin; /* thin | auto | none */
-  scrollbar-color: $color-marine rgba(255, 255, 255, 0.12);
-
-  /* WebKit (Chromium, Safari, Edge) */
-  &::-webkit-scrollbar {
-    width: 10px; /* grosor de la barra */
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent; /* pista transparente para integrarse con el fondo */
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.22); /* estado base */
-    border-radius: 8px;
-    border: 2px solid transparent; /* espacio “interior” */
-    background-clip: padding-box; /* que el borde no tape el color */
-    transition: background-color 120ms ease;
-  }
-  &:hover::-webkit-scrollbar-thumb {
     background-color: $color-marine;
-  }
-  &::-webkit-scrollbar-thumb:active {
-    background-color: $color-marine; /* active: más marcado */
+    padding: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .#{$ns}-separator {
+      height: 1px;
+      background-color: $color-white;
+      margin: 10px 0;
+    }
+
+    /* Mensaje vacío dentro del contenedor del menú */
+    .no-workspaces {
+      color: $color-white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Botón de workspace como rejilla: icon | label | shortcut + descripción */
+    .#{$ns}-item-workspaces {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      grid-auto-rows: auto;
+      column-gap: 10px;
+      row-gap: 6px;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+
+      background: transparent;
+      border: 0;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: $color-white;
+
+      .#{$ns}-icon {
+        grid-column: 1;
+        margin-top: -4px;
+      }
+      .#{$ns}-label {
+        grid-column: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .#{$ns}-shortcut {
+        grid-column: 3;
+        justify-self: end;
+      }
+
+      .#{$ns}-description {
+        grid-column: 1 / -1;
+        padding-top: 10px;
+        font-size: 0.85rem;
+        text-align: center;
+        opacity: 0.85;
+      }
+    }
+
+    .#{$ns}-item-workspaces[style*="cursor: default"] {
+      opacity: 0.9;
+    }
+
+    /* Ítems de conversaciones */
+    .#{$ns}-item-conversations {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 8px;
+      row-gap: 4px;
+      align-items: center;
+      padding: 8px 12px;
+      color: $color-white;
+
+      .#{$ns}-icon {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .#{$ns}-label {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 14px;
+        font-weight: 500;
+        margin-left: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .#{$ns}-shortcut {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        font-size: 12px;
+        color: $color-yellow;
+        margin-left: 38px;
+      }
+
+      &:hover {
+        background-color: $color-graymarine;
+        cursor: pointer;
+      }
+    }
   }
 
-  /* Opcional: “fade” sutil arriba/abajo para sugerir que hay más contenido */
+  /* Contenedor scrollable del sidebar */
+  .#{$ns}--scrollable {
+    max-height: 58vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable both-edges;
+    overscroll-behavior: contain;
 
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    black 12px,
-    black calc(100% - 12px),
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    black 12px,
-    black calc(100% - 12px),
-    transparent 100%
-  );
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: $color-marine rgba(255, 255, 255, 0.12);
+
+    /* WebKit */
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      transition: background-color 120ms ease;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: $color-marine;
+    }
+    &::-webkit-scrollbar-thumb:active {
+      background-color: $color-marine;
+    }
+
+    /* fade sutil arriba/abajo */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 12px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 12px,
+      black calc(100% - 12px),
+      transparent 100%
+    );
+  }
 }
+
+/* Genera las dos variantes */
+@include build-menu("menu"); /* desktop */
+@include build-menu("menu-mini"); /* mini */

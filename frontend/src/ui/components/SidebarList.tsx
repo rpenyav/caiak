@@ -1,7 +1,6 @@
 // src/ui/components/SidebarList.tsx
 import React, { useCallback, useEffect, useRef } from "react";
 import { useWorkspaces, useConversations } from "@/application/contexts";
-
 import LoaderSmall from "./LoaderSmall";
 import {
   IconFolder,
@@ -12,23 +11,26 @@ import {
 } from "./";
 import { truncateText } from "@/application/utils/text";
 
-const SidebarList: React.FC = () => {
+interface SidebarListProps {
+  chatmode: "mini" | "desktop";
+}
+
+const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
+  const ns = chatmode === "mini" ? "menu-mini" : "menu"; // ← prefijo dinámico
+
+  // helpers de clase para no equivocarnos
+  const cls = (suffix = "") => (suffix ? `${ns}${suffix}` : ns);
+
   const { workspaces, loading, error } = useWorkspaces();
   const { stateByWorkspace, toggleWorkspace, refreshWorkspace } =
     useConversations();
 
-  // 🧠 Recordamos qué slugs ya intentamos precargar para no repetir
   const prefetchedSlugsRef = useRef<Set<string>>(new Set());
 
-  // 🚀 Prefetch de conversaciones al tener workspaces tras el login (una sola vez por slug)
   useEffect(() => {
     if (loading || error || workspaces.length === 0) return;
 
-    // (Opcional) limitar número a precargar si tienes muchísimos workspaces:
-    // const toPrefetch = workspaces.slice(0, 5);
-    const toPrefetch = workspaces;
-
-    for (const ws of toPrefetch) {
+    for (const ws of workspaces) {
       const slug = ws.slug;
       if (prefetchedSlugsRef.current.has(slug)) continue;
 
@@ -36,34 +38,29 @@ const SidebarList: React.FC = () => {
       const hasItems = wsState?.items?.length > 0;
       const isLoading = wsState?.loading;
 
-      // Marcamos como "prefetched" ANTES de lanzar para evitar re-entradas
       if (!wsState || (!hasItems && !isLoading)) {
         prefetchedSlugsRef.current.add(slug);
         void refreshWorkspace(slug);
       } else {
-        // Ya hay items o está cargando: también lo marcamos para no insistir
         prefetchedSlugsRef.current.add(slug);
       }
     }
-    // 👇 OJO: intencionadamente NO dependemos de stateByWorkspace para evitar bucles
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, error, workspaces, refreshWorkspace, stateByWorkspace]);
 
   const handleWorkspaceClick = useCallback(
     async (slug: string) => {
       const wsState = stateByWorkspace[slug];
 
-      // Si ya está expandido, colapsamos directamente.
       if (wsState?.expanded) {
         await toggleWorkspace(slug);
         return;
       }
 
-      // Si NO tenemos items cargados todavía, intentamos cargarlos primero.
       const hasLoadedOnce = !!wsState;
       const hasItems = wsState?.items?.length > 0;
 
       if (!hasLoadedOnce || (!hasItems && !wsState?.loading)) {
-        // Marcamos también aquí para evitar que el efecto vuelva a disparar
         prefetchedSlugsRef.current.add(slug);
         await refreshWorkspace(slug);
       }
@@ -79,18 +76,18 @@ const SidebarList: React.FC = () => {
   );
 
   return (
-    <div className="menu menu--scrollable">
-      <div className="menu-separator"></div>
+    <div className={`${cls()} ${cls("--scrollable")}`}>
+      <div className={cls("-separator")} />
 
       {loading && (
         <>
-          <div className="menu-item">
+          <div className={cls("-item")}>
             <LoaderSmall />
-            <div className="menu-label">Cargando workspaces…</div>
+            <div className={cls("-label")}>Cargando workspaces…</div>
           </div>
-          <div className="menu-item">
+          <div className={cls("-item")}>
             <LoaderSmall />
-            <div className="menu-label">Cargando workspaces…</div>
+            <div className={cls("-label")}>Cargando workspaces…</div>
           </div>
         </>
       )}
@@ -115,32 +112,41 @@ const SidebarList: React.FC = () => {
             <div key={ws._id}>
               <button
                 type="button"
-                className="menu-item-workspaces"
+                className={cls("-item-workspaces")}
                 onClick={() => void handleWorkspaceClick(ws.slug)}
                 aria-expanded={expanded}
                 aria-controls={`ws-${ws.slug}-panel`}
                 style={{ cursor: canExpand ? "pointer" : "default" }}
               >
-                <div className="menu-icon">
+                <div className={cls("-icon")}>
                   <IconFolder
                     height={16}
-                    color="#ffffff"
+                    color={chatmode === "mini" ? " #000000" : " #ffffff"}
                     hoverColor="#d4a017"
                   />
                 </div>
-                <div className="menu-label">
+
+                <div className={cls("-label")} title={ws.name}>
                   {truncateText(ws.name ?? "", 28, { byWords: true })}
                 </div>
-                <div className="menu-shortcut">
+
+                <div className={cls("-shortcut")}>
                   {expanded ? (
-                    <IconDownCaret />
+                    <IconDownCaret
+                      color={chatmode === "mini" ? " #000000" : " #ffffff"}
+                    />
                   ) : canExpand ? (
-                    <IconRightCaret />
+                    <IconRightCaret
+                      color={chatmode === "mini" ? " #000000" : " #ffffff"}
+                    />
                   ) : (
-                    <IconMinus />
+                    <IconMinus
+                      color={chatmode === "mini" ? " #000000" : " #ffffff"}
+                    />
                   )}
                 </div>
-                <div className="menu-description">
+
+                <div className={cls("-description")}>
                   {canExpand ? (
                     <></>
                   ) : convLoading ? (
@@ -154,28 +160,35 @@ const SidebarList: React.FC = () => {
               </button>
 
               {expanded && (
-                <div id={`ws-${ws.slug}-panel`} className="menu-sublist ms-3">
+                <div
+                  id={`ws-${ws.slug}-panel`}
+                  className={`${cls("-sublist")} ms-3`}
+                >
                   {convLoading && (
-                    <div className="menu-item-conversations">
+                    <div className={cls("-item-conversations")}>
                       <LoaderSmall />
                     </div>
                   )}
 
                   {!convLoading && convError && (
-                    <div className="alert  alert-danger">{convError}</div>
+                    <div className="alert alert-danger">{convError}</div>
                   )}
 
                   {!convLoading &&
                     !convError &&
                     conversations.map((c) => (
-                      <div key={c._id} className="menu-item-conversations">
-                        <div className="menu-icon">
-                          <IconDialog />
+                      <div key={c._id} className={cls("-item-conversations")}>
+                        <div className={cls("-icon")}>
+                          <IconDialog
+                            color={
+                              chatmode === "mini" ? " #000000" : " #ffffff"
+                            }
+                          />
                         </div>
-                        <div className="menu-label">
+                        <div className={cls("-label")} title={c.name}>
                           {truncateText(c.name ?? "", 28, { byWords: true })}
                         </div>
-                        <div className="menu-shortcut">
+                        <div className={cls("-shortcut")}>
                           {new Date(c.createdAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -186,7 +199,7 @@ const SidebarList: React.FC = () => {
           );
         })}
 
-      <div className="menu-separator"></div>
+      <div className={cls("-separator")} />
     </div>
   );
 };

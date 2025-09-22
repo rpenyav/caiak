@@ -265,3 +265,71 @@
   .caiak-dropdown-sep { background: rgba(255,255,255,.12); }
 }
 */
+
+.chat-container {
+  &.chat-mini {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    /* dejamos visible el header; el recorte del drawer será en chat-content */
+    overflow: visible;
+  }
+}
+
+/* ✅ La caja blanca ahora será el “viewport” del drawer */
+.chat-content {
+  background: #f9f9f9;
+  position: relative; /* clave */
+  overflow: hidden; /* recorta overlay/panel dentro del área blanca */
+}
+
+/* ❌ Si tienes esta regla global, elimínala o déjala sin 'fixed'
+.caiak-drawer { position: fixed; inset: 0; }
+*/
+
+/* ✅ Drawer *solo* dentro de la caja blanca */
+.chat-content .caiak-drawer {
+  position: absolute; /* relativo a .chat-content */
+  inset: 0; /* ocupa todo el área blanca */
+  z-index: 5; /* por encima del contenido, por debajo del header del mini */
+}
+
+.caiak-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+.caiak-drawer__overlay.is-in {
+  opacity: 1;
+}
+
+.caiak-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 95%); /* % del área blanca, no del viewport */
+  background: #fff;
+  box-shadow: -10px 0 24px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%);
+  transition: transform 280ms ease;
+  display: flex;
+  flex-direction: column;
+}
+.caiak-drawer__panel.is-in {
+  transform: translateX(0);
+}
+
+.mini-nav-trigger__label {
+  font-size: 14px;
+  font-weight: 500;
+  vertical-align: middle;
+}

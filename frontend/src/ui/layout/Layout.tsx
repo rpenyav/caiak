@@ -5,13 +5,11 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import ChatMiniContainer from "./ChatMiniContainer";
-// ❌ ya no necesitamos importar ChatPage aquí
-// import ChatPage from "@/ui/pages/ChatPage";
 import { ChatBubble } from "../components";
+import ModeProviders from "./ModeProviders";
 
 const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
 
-// Persistencia de abierto/cerrado (como ya montamos antes)
 const CHAT_OPEN_KEY = "caiak.chatOpen";
 const parseBool = (v: string | null) => v === "1" || v === "true";
 const loadChatOpen = (fallback = false) => {
@@ -35,7 +33,6 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { isAuthenticated } = useAuth();
 
-  // mini => recuerda estado, desktop => abierto por defecto
   const [isChatOpen, setIsChatOpen] = useState<boolean>(() =>
     chatMode === "desktop" ? true : loadChatOpen(false)
   );
@@ -65,18 +62,20 @@ const Layout = ({ children }: LayoutProps) => {
       )}
 
       {chatMode === "mini" && isChatOpen && (
-        <ChatMiniContainer onMinimize={handleMinimize} onClose={handleClose}>
-          {/* ✅ AHORA mostramos siempre el children de la ruta ACTUAL */}
-          {children}
-        </ChatMiniContainer>
+        <ModeProviders mode="mini">
+          <ChatMiniContainer onMinimize={handleMinimize} onClose={handleClose}>
+            {/* ✅ En mini, renderizamos SIEMPRE el children de la ruta actual */}
+            {children}
+          </ChatMiniContainer>
+        </ModeProviders>
       )}
 
       {chatMode === "desktop" && (
-        <>
+        <ModeProviders mode="desktop">
           {isAuthenticated && <Header />}
           {isAuthenticated ? <Main /> : children}
           {isAuthenticated && <Footer />}
-        </>
+        </ModeProviders>
       )}
     </div>
   );
