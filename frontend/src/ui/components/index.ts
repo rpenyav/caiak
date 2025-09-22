@@ -58,6 +58,8 @@ export { default as IconMinus } from "./icons/IconMinus";
 export { default as IconDialog } from "./icons/IconDialog";
 export { default as IconClose } from "./icons/IconClose";
 export { default as IconSettings } from "./icons/IconSettings";
-
+export { default as MessageBot } from "./MessageBot";
 export { default as MiniNavigation } from "./MiniNavigation";
 // export { default as IconCheck } from "./icons/IconCheck";
+export { default as MessageHuman } from "./MessageHuman";
+export { default as ChatInputArea } from "./ChatInputArea";

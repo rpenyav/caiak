@@ -85,15 +85,23 @@
   position: relative; // Asegura que se comporte dentro del flujo
 }
 
+/* src/styles/layout.scss */
 .area-chat {
   background-color: $color-white;
-  height: calc(100vh - 148px); // 100% de la altura menos el footer
-  overflow-y: auto; // Permite scroll si el contenido excede
-  position: relative; // Asegura que se comporte dentro del flujo
+  height: calc(100vh - 148px);
+  position: relative;
+
+  display: flex; /* ⟵ fija el footer del chat abajo */
+  flex-direction: column;
+  overflow: hidden; /* el scroll no es aquí */
 }
 
 .area-inside-chat {
-  padding: 25px;
+  flex: 1 1 auto; /* ⟵ rellena */
+  min-height: 0; /* ⟵ permite overflow del hijo */
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* deja el padding al contenedor de mensajes */
   background-color: $color-white;
 }
 

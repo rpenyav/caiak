@@ -1,0 +1,266 @@
+/* src/styles/chatbot.scss */
+@use "./variables.scss" as *;
+
+/* ===== Desktop ===== */
+.chat-desktop {
+  flex: 1 1 auto; /* llena el alto disponible en .area-inside-chat */
+  min-height: 0; /* permite overflow del listado */
+  display: grid; /* dos filas: mensajes + footer */
+  grid-template-rows: 1fr auto;
+  background: #fff;
+}
+
+.chat-desktop__messages {
+  min-height: 0; /* crítico p/scroll */
+  overflow-y: auto; /* el scroll vive aquí */
+  padding: 20px; /* aquí el padding del área de mensajes */
+  background: #f7f7f8;
+}
+
+.chat-desktop__footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 12px 14px;
+}
+
+/* Input desktop (si quieres diferenciar naming) */
+.chat-desktop-input {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  &__textarea {
+    width: 100%;
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.35;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+  &__send {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: $color-graymarine;
+    color: $color-white;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(0.95);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+.chat-content {
+  background: #f9f9f9;
+  position: relative;
+  overflow: hidden; /* el drawer y overlays quedan dentro */
+  display: flex; /* ⟵ clave */
+  flex-direction: column; /* ⟵ clave */
+  min-height: 0; /* ⟵ evita que hijos “empujen” */
+}
+
+.chatbot {
+  flex: 1 1 auto; /* llena el alto dentro de chat-mini-body */
+  min-height: 0; /* permite overflow del listado */
+  display: grid; /* dos filas: lista + footer */
+  grid-template-rows: 1fr auto; /* lista (scrollea) + input (fijo) */
+  background: #fff;
+}
+
+.chatbot__messages {
+  min-height: 0; /* crítico para que haga scroll */
+  overflow-y: auto; /* el scroll vive aquí */
+  padding: 16px;
+  background: #f7f7f8;
+}
+
+.chatbot__footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 10px 12px;
+}
+
+/* Si el textarea crece, limita y scrollea dentro */
+.chat-input__textarea {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+/* El contenedor de la página mini usa todo el alto disponible */
+.chat-mini-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Burbujas (igual que antes) ---- */
+.msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 8px 0;
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $color-yellow;
+    color: $color-white;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    flex: 0 0 32px;
+    user-select: none;
+  }
+
+  &__bubble {
+    max-width: min(72%, 680px);
+    padding: 10px 12px;
+    border-radius: 14px;
+    line-height: 1.35;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    position: relative;
+  }
+  &__text {
+    margin: 0;
+  }
+  &__time {
+    display: inline-block;
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 6px;
+  }
+
+  &--bot {
+    justify-content: flex-start;
+    .msg__bubble {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #111;
+      border-bottom-left-radius: 4px;
+    }
+  }
+  &--human {
+    justify-content: flex-end;
+    .msg__avatar {
+      order: 2;
+    }
+    .msg__bubble {
+      order: 1;
+      background: $color-marine;
+      color: $color-white;
+      border: 1px solid transparent;
+      border-bottom-right-radius: 4px;
+    }
+  }
+}
+
+/* Input */
+.chat-input {
+  padding: 10px 12px;
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  &__textarea {
+    width: 100%;
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.35;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+  &__send {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: $color-graymarine;
+    color: $color-white;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(0.95);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+/* ===== Desktop variant (mismo comportamiento que mini) ===== */
+.chat-desktop {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto; /* lista con scroll + input fijo */
+  background: #fff;
+}
+
+.chat-desktop__messages {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f7f8;
+}
+
+.chat-desktop__footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 10px 12px;
+}
+
+/* input (mismo look que el mini) */
+.chat-desktop-input {
+  padding: 10px 12px;
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  &__textarea {
+    width: 100%;
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.35;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+  &__send {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: $color-graymarine;
+    color: $color-white;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(0.95);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
