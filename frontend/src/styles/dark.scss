@@ -17,6 +17,21 @@
   background-color: $color-graymarine;
 }
 
+.header-custom-mini {
+  display: flex;
+  width: 100%;
+  height: 57px;
+  padding-top: 14px;
+  padding-left: 6px;
+  padding-right: 14px;
+  padding-bottom: 14px;
+  align-items: center;
+
+  border-bottom: 1px solid $color-white;
+  flex-wrap: wrap;
+  background-color: $color-graymarine;
+}
+
 .footer-custom {
   border-top: 1px solid $color-white;
   background-color: $color-graymarine;
@@ -90,7 +105,7 @@ body {
   }
 }
 
-.logout-button {
+.headers-button {
   background: none;
   border: none;
   padding: 0;
@@ -114,7 +129,7 @@ body {
 }
 
 /* al hacer hover sobre el botón, cambiamos el fill del SVG interno */
-.logout-button:hover .icon-hover {
+.headers-button:hover .icon-hover {
   fill: var(--icon-hover-color, var(--icon-color, currentColor));
 }
 

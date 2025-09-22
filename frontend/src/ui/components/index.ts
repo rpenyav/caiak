@@ -56,3 +56,5 @@ export { default as IconDownCaret } from "./icons/IconDownCaret";
 export { default as IconMinus } from "./icons/IconMinus";
 
 export { default as IconDialog } from "./icons/IconDialog";
+export { default as IconClose } from "./icons/IconClose";
+export { default as IconSettings } from "./icons/IconSettings";

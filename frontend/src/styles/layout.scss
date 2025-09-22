@@ -191,3 +191,77 @@
 .part2 {
   flex: 1; // Cada parte ocupa el 50% del ancho disponible
 }
+
+/* AÑADE ESTO (mejor cerca del resto de dropdown styles) */
+.header-custom-mini .dropdown-wrap .dropdown-menu {
+  display: block !important; /* pisa Bootstrap */
+}
+/* header y contenedores sin recortes */
+.header-custom-mini {
+  position: relative;
+  z-index: 1500;
+  overflow: visible;
+}
+.part2 {
+  position: relative;
+  overflow: visible;
+}
+.chat-container.chat-mini,
+.chat-container.chat-desktop {
+  position: fixed;
+  z-index: 1000;
+  overflow: visible;
+}
+
+/* Dropdown propio */
+.caiak-dropdown-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.caiak-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  display: block; /* aquí NO depende de Bootstrap */
+  background: #fff;
+  color: #222;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  z-index: 3000; /* por encima del header y container */
+}
+
+.caiak-dropdown-item {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+}
+
+.caiak-dropdown-sep {
+  height: 1px;
+  margin: 6px 4px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Variante dark si el header es oscuro:
+.caiak-dropdown-menu {
+  background: $color-marine;
+  color: $color-white;
+  border-color: rgba(255,255,255,.12);
+  .caiak-dropdown-item { color: $color-white; }
+  .caiak-dropdown-item:hover { background: rgba(255,255,255,.07); }
+  .caiak-dropdown-sep { background: rgba(255,255,255,.12); }
+}
+*/

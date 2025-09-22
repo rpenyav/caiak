@@ -5,3 +5,4 @@ export { default as PrivateLayout } from "./Layout";
 
 export { default as ChatMiniContainer } from "./ChatMiniContainer";
 export { default as Sidebar } from "./Sidebar";
+export { default as HeaderMini } from "./HeaderMini";

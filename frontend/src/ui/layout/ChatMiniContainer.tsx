@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import Header from "./Header";
+import HeaderMini from "./HeaderMini";
 
 const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
 const chatMiniWidth = Number(import.meta.env.VITE_CHAT_MINI_WIDTH);
@@ -23,25 +25,8 @@ const ChatMiniContainer = ({ children, onMinimize, onClose }: CCProps) => {
       }`}
       style={miniStyle}
     >
-      <div className="chat-header bg-primary text-white text-center py-2 d-flex justify-content-between align-items-center">
-        <span>Chat {chatMode === "mini" ? "Mini" : "Desktop"}</span>
-        {chatMode === "mini" && (
-          <div>
-            <button
-              className="btn btn-sm btn-light me-2 chat-minimize"
-              onClick={onMinimize}
-            >
-              —
-            </button>
-            <button
-              className="btn btn-sm btn-danger chat-close"
-              onClick={onClose}
-            >
-              ✕
-            </button>
-          </div>
-        )}
-      </div>
+      <HeaderMini mode={chatMode} onMinimize={onMinimize} onClose={onClose} />
+
       <div className="chat-content p-3 flex-grow-1">{children}</div>
     </div>
   );

@@ -25,7 +25,7 @@ const Header = () => {
         </div>
         <div className="part2">
           <button
-            className="logout-button"
+            className="headers-button"
             onClick={handleLogout}
             aria-label="Logout"
           >

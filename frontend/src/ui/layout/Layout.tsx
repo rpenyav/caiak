@@ -1,15 +1,32 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/auth";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import ChatMiniContainer from "./ChatMiniContainer";
-import ChatPage from "@/ui/pages/ChatPage";
+// ❌ ya no necesitamos importar ChatPage aquí
+// import ChatPage from "@/ui/pages/ChatPage";
 import { ChatBubble } from "../components";
-import { useNavigate } from "react-router-dom";
 
 const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
+
+// Persistencia de abierto/cerrado (como ya montamos antes)
+const CHAT_OPEN_KEY = "caiak.chatOpen";
+const parseBool = (v: string | null) => v === "1" || v === "true";
+const loadChatOpen = (fallback = false) => {
+  try {
+    const raw = localStorage.getItem(CHAT_OPEN_KEY);
+    return raw == null ? fallback : parseBool(raw);
+  } catch {
+    return fallback;
+  }
+};
+const saveChatOpen = (val: boolean) => {
+  try {
+    localStorage.setItem(CHAT_OPEN_KEY, val ? "1" : "0");
+  } catch {}
+};
 
 interface LayoutProps {
   children: ReactNode;
@@ -17,21 +34,43 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const { isAuthenticated } = useAuth();
-  const [isChatOpen, setIsChatOpen] = useState(chatMode === "desktop");
-  const navigate = useNavigate();
+
+  // mini => recuerda estado, desktop => abierto por defecto
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(() =>
+    chatMode === "desktop" ? true : loadChatOpen(false)
+  );
+
+  useEffect(() => {
+    if (chatMode === "mini") saveChatOpen(isChatOpen);
+  }, [isChatOpen]);
+
+  useEffect(() => {
+    if (chatMode !== "mini") return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === CHAT_OPEN_KEY && e.storageArea === localStorage) {
+        setIsChatOpen(parseBool(e.newValue));
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   const handleMinimize = () => setIsChatOpen(false);
   const handleClose = () => setIsChatOpen(false);
 
   return (
     <div className="w-100 d-flex flex-column min-vh-100">
       {chatMode === "mini" && !isChatOpen && (
-        <ChatBubble onClick={() => setIsChatOpen(true)} />
+        <ChatBubble onClick={() => setIsChatOpen((v) => !v)} />
       )}
+
       {chatMode === "mini" && isChatOpen && (
         <ChatMiniContainer onMinimize={handleMinimize} onClose={handleClose}>
-          {isAuthenticated ? <ChatPage /> : children}
+          {/* ✅ AHORA mostramos siempre el children de la ruta ACTUAL */}
+          {children}
         </ChatMiniContainer>
       )}
+
       {chatMode === "desktop" && (
         <>
           {isAuthenticated && <Header />}

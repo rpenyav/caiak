@@ -1,4 +1,3 @@
-// src/routes/AppRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
@@ -6,9 +5,13 @@ import Layout from "@/ui/layout/Layout";
 import { getStoredToken } from "@/application/utils/tokenUtils";
 import PrivateRoute from "./PrivateRoute";
 
+const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
+
 const LoginPage = lazy(() => import("@/ui/pages/LoginPage"));
 const DashboardPage = lazy(() => import("@/ui/pages/DashboardPage"));
 const PerfilPage = lazy(() => import("@/ui/pages/PerfilPage"));
+const SettingsPage = lazy(() => import("@/ui/pages/SettingsPage")); // si aún no existe, crea el stub
+const ChatPage = lazy(() => import("@/ui/pages/ChatPage")); // 👈 IMPORTANTE
 const NotFoundPage = lazy(() => import("@/ui/pages/NotFoundPage"));
 
 const AppRoutes = () => {
@@ -16,11 +19,9 @@ const AppRoutes = () => {
 
   useEffect(() => {
     const bump = () => setTick((n) => n + 1);
-
     const onVisibility = () => {
       if (document.visibilityState === "visible") bump();
     };
-
     const onAuthToken = () => bump();
     const onAuthExpired = () => bump();
 
@@ -47,6 +48,7 @@ const AppRoutes = () => {
       <Toaster />
       <Suspense>
         <Routes>
+          {/* redirección inicial: seguimos enviando a /dashboard */}
           <Route
             path="/"
             element={
@@ -67,12 +69,13 @@ const AppRoutes = () => {
             }
           />
 
+          {/* 👇 En MINI -> ChatPage; en DESKTOP -> DashboardPage */}
           <Route
             path="/dashboard"
             element={
               <PrivateRoute>
                 <Layout>
-                  <DashboardPage />
+                  {chatMode === "mini" ? <ChatPage /> : <DashboardPage />}
                 </Layout>
               </PrivateRoute>
             }
@@ -84,6 +87,17 @@ const AppRoutes = () => {
               <PrivateRoute>
                 <Layout>
                   <PerfilPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <SettingsPage />
                 </Layout>
               </PrivateRoute>
             }

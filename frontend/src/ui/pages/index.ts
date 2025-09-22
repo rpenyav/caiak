@@ -8,6 +8,9 @@ export { default as NotFoundPage } from "./NotFoundPage";
 // export { default as DocumentacioPage } from "./DocumentacioPage";
 export { default as PerfilPage } from "./PerfilPage";
 export { default as ChatPage } from "./ChatPage";
+
+export { default as Settings } from "./SettingsPage";
+
 // export { default as BackofficePage } from "./BackofficePage";
 // export { default as ExpedientDetailPage } from "./ExpedientDetailPage";
 // export { default as CallbackNouUsuari } from "./CallbackNouUsuari";
