@@ -10,7 +10,7 @@ import {
   IconDialog,
 } from "./";
 import { truncateText } from "@/application/utils/text";
-
+import { useMessages } from "@/application/contexts/MessagesContext";
 interface SidebarListProps {
   chatmode: "mini" | "desktop";
 }
@@ -24,7 +24,7 @@ const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
   const { workspaces, loading, error } = useWorkspaces();
   const { stateByWorkspace, toggleWorkspace, refreshWorkspace } =
     useConversations();
-
+  const { state: msgState, openConversation } = useMessages();
   const prefetchedSlugsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
@@ -176,23 +176,41 @@ const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
 
                   {!convLoading &&
                     !convError &&
-                    conversations.map((c) => (
-                      <div key={c._id} className={cls("-item-conversations")}>
-                        <div className={cls("-icon")}>
-                          <IconDialog
-                            color={
-                              chatmode === "mini" ? " #000000" : " #ffffff"
-                            }
-                          />
+                    conversations.map((c) => {
+                      const selected =
+                        msgState.selectedConversationId === c._id;
+                      return (
+                        <div
+                          key={c._id}
+                          className={`${cls("-item-conversations")}${
+                            selected ? " is-selected" : ""
+                          }`}
+                          onClick={() =>
+                            void openConversation(c._id, ws.slug, c.name)
+                          }
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            openConversation(c._id, ws.slug, c.name)
+                          }
+                        >
+                          <div className={cls("-icon")}>
+                            <IconDialog
+                              color={
+                                chatmode === "mini" ? " #000000" : " #ffffff"
+                              }
+                            />
+                          </div>
+                          <div className={cls("-label")} title={c.name}>
+                            {truncateText(c.name ?? "", 28, { byWords: true })}
+                          </div>
+                          <div className={cls("-shortcut")}>
+                            {new Date(c.createdAt).toLocaleDateString()}
+                          </div>
                         </div>
-                        <div className={cls("-label")} title={c.name}>
-                          {truncateText(c.name ?? "", 28, { byWords: true })}
-                        </div>
-                        <div className={cls("-shortcut")}>
-                          {new Date(c.createdAt).toLocaleDateString()}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
               )}
             </div>

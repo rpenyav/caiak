@@ -1,4 +1,4 @@
-import { LogoCaiak } from "../components";
+import { LogoCaiak } from "../../components";
 
 declare const __APP_VERSION__: string;
 

@@ -1,7 +1,7 @@
 // src/ui/layout/ChatMiniContainer.tsx
+import { MiniNavigation } from "@/ui/components";
 import type { ReactNode } from "react";
 import HeaderMini from "./HeaderMini";
-import { MiniNavigation } from "../components";
 
 const chatMode = import.meta.env.VITE_CHAT_MODE as "mini" | "desktop";
 const chatMiniWidth = Number(import.meta.env.VITE_CHAT_MINI_WIDTH);

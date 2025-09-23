@@ -13,7 +13,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { AuthAndLogGuard } from '../common/guards/auth-and-log.guard';
 import { RolesGuard } from '../auth/roles.guard';
-import { Observable, map, concatMap, tap, from } from 'rxjs';
+import { Observable, map, concatMap, tap, from, concat, of } from 'rxjs';
 
 @Controller('messages')
 @UseGuards(AuthAndLogGuard)
@@ -31,38 +31,49 @@ export class MessagesController {
       this.messagesService.createHumanMessage(req, createMessageDto),
     ).pipe(
       concatMap((humanMessage) =>
-        from(
-          this.messagesService.generateBotResponse(humanMessage.conversationId),
-        ).pipe(
-          concatMap(
-            (
-              stream: Observable<{ content: string; suggestTicket: boolean }>,
-            ) => {
-              let fullResponse = '';
-              return stream.pipe(
-                map(({ content, suggestTicket }) => {
-                  fullResponse += content;
-                  return { data: { content, suggestTicket } } as MessageEvent;
-                }),
-                tap({
-                  complete: () => {
-                    const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
-                      fullResponse,
-                    );
-                    this.messagesService.saveBotMessage(
-                      humanMessage.conversationId,
-                      fullResponse,
-                      humanMessage.userId,
-                      suggestTicket,
-                    );
-                  },
-                }),
-                concatMap((event) =>
-                  from([event, { data: '[DONE]' } as MessageEvent]),
-                ),
-              );
-            },
+        // 1) Emitimos primero el id del mensaje humano
+        concat(
+          of({
+            data: { humanMessageId: humanMessage._id, kind: 'human_saved' },
+          } as MessageEvent),
+          // 2) Stream de respuesta del bot
+          from(
+            this.messagesService.generateBotResponse(
+              humanMessage.conversationId,
+            ),
+          ).pipe(
+            concatMap(
+              (
+                stream: Observable<{ content: string; suggestTicket: boolean }>,
+              ) => {
+                let fullResponse = '';
+                // emitimos SOLO chunks; el DONE va fuera
+                return stream.pipe(
+                  map(({ content, suggestTicket }) => {
+                    fullResponse += content;
+                    return {
+                      data: { content, suggestTicket },
+                    } as MessageEvent;
+                  }),
+                  tap({
+                    complete: () => {
+                      const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+                        fullResponse,
+                      );
+                      this.messagesService.saveBotMessage(
+                        humanMessage.conversationId,
+                        fullResponse,
+                        humanMessage.userId,
+                        suggestTicket,
+                      );
+                    },
+                  }),
+                );
+              },
+            ),
           ),
+          // 3) ÚNICO [DONE] al final de todo
+          of({ data: '[DONE]' } as MessageEvent),
         ),
       ),
     );
@@ -74,32 +85,32 @@ export class MessagesController {
     @Param('conversationId') conversationId: string,
   ): Observable<MessageEvent> {
     let fullResponse = '';
-    return from(this.messagesService.generateBotResponse(conversationId)).pipe(
-      concatMap(
-        (stream: Observable<{ content: string; suggestTicket: boolean }>) =>
-          stream.pipe(
-            map(({ content, suggestTicket }) => {
-              fullResponse += content;
-              return { data: { content, suggestTicket } } as MessageEvent;
-            }),
-            tap({
-              complete: () => {
-                const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
-                  fullResponse,
-                );
-                this.messagesService.saveBotMessage(
-                  conversationId,
-                  fullResponse,
-                  'bot',
-                  suggestTicket,
-                );
-              },
-            }),
-            concatMap((event) =>
-              from([event, { data: '[DONE]' } as MessageEvent]),
+    return concat(
+      from(this.messagesService.generateBotResponse(conversationId)).pipe(
+        concatMap(
+          (stream: Observable<{ content: string; suggestTicket: boolean }>) =>
+            stream.pipe(
+              map(({ content, suggestTicket }) => {
+                fullResponse += content;
+                return { data: { content, suggestTicket } } as MessageEvent;
+              }),
+              tap({
+                complete: () => {
+                  const suggestTicket = /crea un ticket|TICKET-\d{4}/.test(
+                    fullResponse,
+                  );
+                  this.messagesService.saveBotMessage(
+                    conversationId,
+                    fullResponse,
+                    'bot',
+                    suggestTicket,
+                  );
+                },
+              }),
             ),
-          ),
+        ),
       ),
+      of({ data: '[DONE]' } as MessageEvent),
     );
   }
 

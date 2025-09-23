@@ -1,5 +1,5 @@
 import { useAuth } from "@/auth";
-import { LogoCaiak, IconLogout } from "../components";
+import { LogoCaiak, IconLogout } from "../../components";
 
 const Header = () => {
   const { logout } = useAuth();

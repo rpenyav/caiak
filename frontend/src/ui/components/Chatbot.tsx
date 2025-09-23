@@ -3,58 +3,75 @@ import React, { useEffect, useRef } from "react";
 import MessageBot from "./MessageBot";
 import MessageHuman from "./MessageHuman";
 import ChatInputArea from "./ChatInputArea";
+import { useMessages } from "@/application/contexts/MessagesContext";
+import { truncateText } from "@/application/utils/text";
 
 type ChatbotProps = { mode?: "mini" | "desktop" };
 
 const Chatbot: React.FC<ChatbotProps> = ({ mode = "desktop" }) => {
-  const messages = [
-    {
-      id: "1",
-      type: "bot",
-      text: "¡Hola! Soy tu asistente. ¿En qué puedo ayudarte?",
-      time: "09:41",
-    },
-    {
-      id: "2",
-      type: "bot",
-      text: "Claro. Déjame comprobar el estado…",
-      time: "09:42",
-    },
-    {
-      id: "3",
-      type: "human",
-      text: "Necesito información sobre el pedido #1234.",
-      time: "09:42",
-    },
-    { id: "4", type: "human", text: "¡Gracias!", time: "09:43" },
-  ];
+  const { state } = useMessages();
+  const {
+    items,
+    loading,
+    error,
+    selectedConversationId,
+    selectedConversationTitle, // 👈 lo tomamos DIRECTO del context
+    streamingBotText,
+  } = state;
 
   const listRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages.length]);
+  }, [items.length, streamingBotText]);
+
+  const isMini = mode === "mini";
+  const rootCls = isMini ? "chatbot" : "chat-desktop";
+  const headCls = isMini ? "chatbot__header" : "chat-desktop__header";
+  const listCls = isMini ? "chatbot__messages" : "chat-desktop__messages";
+  const footerCls = isMini ? "chatbot__footer" : "chat-desktop__footer";
 
   return (
-    <div className={mode === "mini" ? "chatbot" : "chat-desktop"}>
-      <div
-        ref={listRef}
-        className={
-          mode === "mini" ? "chatbot__messages" : "chat-desktop__messages"
-        }
-      >
-        {messages.map((m) =>
-          m.type === "bot" ? (
-            <MessageBot key={m.id} text={m.text} time={m.time} />
-          ) : (
-            <MessageHuman key={m.id} text={m.text} time={m.time} />
-          )
+    <div className={rootCls}>
+      <div ref={listRef} className={listCls}>
+        {!selectedConversationId && !loading && !error && (
+          <div className="mini-text">
+            Selecciona una conversación para empezar
+          </div>
+        )}
+        {loading && <div className="mini-text">Cargando mensajes…</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        {selectedConversationTitle && (
+          <div className={headCls} title={selectedConversationTitle}>
+            {truncateText(selectedConversationTitle, 60, { byWords: true })}
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          items.map((m) =>
+            m.sender === "bot" ? (
+              <MessageBot
+                key={m._id}
+                text={m.content}
+                time={new Date(m.createdAt).toLocaleTimeString()}
+              />
+            ) : (
+              <MessageHuman
+                key={m._id}
+                text={m.content}
+                time={new Date(m.createdAt).toLocaleTimeString()}
+              />
+            )
+          )}
+
+        {streamingBotText && (
+          <MessageBot text={streamingBotText} avatarEmoji="⌛" />
         )}
       </div>
 
-      <div
-        className={mode === "mini" ? "chatbot__footer" : "chat-desktop__footer"}
-      >
+      <div className={footerCls}>
         <ChatInputArea mode={mode} />
       </div>
     </div>

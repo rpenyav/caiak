@@ -8,7 +8,7 @@ import {
   IconMinus,
   IconClose,
   IconSettings,
-} from "../components";
+} from "../../components";
 
 type HeaderMiniProps = {
   onMinimize?: () => void;
