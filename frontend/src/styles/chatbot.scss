@@ -93,7 +93,7 @@
 /* Si el textarea crece, limita y scrollea dentro */
 .chat-input__textarea {
   max-height: 180px;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 /* El contenedor de la página mini usa todo el alto disponible */
@@ -246,7 +246,7 @@
     font-size: 14px;
     line-height: 1.35;
     max-height: 35vh;
-    overflow-y: auto;
+    overflow-y: hidden;
   }
   &__send {
     padding: 10px 14px;

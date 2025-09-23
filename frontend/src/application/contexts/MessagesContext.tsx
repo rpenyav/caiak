@@ -5,18 +5,18 @@ import React, {
   useContext,
   useMemo,
   useRef,
-  useEffect,
   useState,
 } from "react";
 import type { Message } from "@/domain/models/Message";
 import { MessageService } from "@/application/services/MessageService";
-
-const PERSIST_KEY = "caiak:lastConversation";
+import { WorkspaceService } from "@/application/services/WorkspaceService";
+import { ConversationService } from "@/application/services/ConversationService";
+import { useUser } from "./UserContext";
 
 type MessagesState = {
   selectedConversationId: string | null;
-  selectedWorkspaceSlug: string | null;
   selectedConversationTitle: string | null;
+  selectedWorkspaceSlug: string | null;
 
   loading: boolean;
   error: string | null;
@@ -29,13 +29,11 @@ type MessagesState = {
 
 type MessagesContextValue = {
   state: MessagesState;
-
   openConversation: (
     conversationId: string,
     workspaceSlug?: string,
     conversationTitle?: string
   ) => Promise<void>;
-
   clear: () => void;
   appendLocal: (msg: Message) => void;
 
@@ -47,13 +45,21 @@ const MessagesContext = createContext<MessagesContextValue | undefined>(
   undefined
 );
 
+const LS = {
+  lastConvId: "caiak:lastConversationId",
+  lastConvTitle: "caiak:lastConversationTitle",
+  lastWs: "caiak:lastWorkspaceSlug",
+};
+
 export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
+  const { user } = useUser();
+
   const [state, setState] = useState<MessagesState>({
     selectedConversationId: null,
-    selectedWorkspaceSlug: null,
     selectedConversationTitle: null,
+    selectedWorkspaceSlug: null,
 
     loading: false,
     error: null,
@@ -63,33 +69,43 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
     streamingSuggestTicket: false,
   });
 
-  const service = useMemo(() => new MessageService(), []);
+  const messageService = useMemo(() => new MessageService(), []);
+  const workspaceService = useMemo(() => new WorkspaceService(), []);
+  const conversationService = useMemo(() => new ConversationService(), []);
   const cancelRef = useRef<null | (() => void)>(null);
-  const hydratedRef = useRef(false);
 
+  // ---- helpers de persistencia ----
+  const persistSelection = useCallback(
+    (
+      conversationId: string | null,
+      conversationTitle: string | null,
+      ws?: string | null
+    ) => {
+      if (conversationId) localStorage.setItem(LS.lastConvId, conversationId);
+      else localStorage.removeItem(LS.lastConvId);
+
+      if (conversationTitle)
+        localStorage.setItem(LS.lastConvTitle, conversationTitle);
+      else localStorage.removeItem(LS.lastConvTitle);
+
+      if (ws) localStorage.setItem(LS.lastWs, ws);
+    },
+    []
+  );
+
+  // ---- abrir conversación existente ----
   const openConversation = useCallback(
     async (
       conversationId: string,
       workspaceSlug?: string,
       conversationTitle?: string
     ) => {
-      // Persistimos inmediatamente la selección
-      try {
-        localStorage.setItem(
-          PERSIST_KEY,
-          JSON.stringify({
-            id: conversationId,
-            slug: workspaceSlug ?? null,
-            title: conversationTitle ?? null,
-          })
-        );
-      } catch {}
-
       setState((s) => ({
         ...s,
         selectedConversationId: conversationId,
-        selectedWorkspaceSlug: workspaceSlug ?? null,
-        selectedConversationTitle: conversationTitle ?? null,
+        selectedConversationTitle:
+          conversationTitle ?? s.selectedConversationTitle,
+        selectedWorkspaceSlug: workspaceSlug ?? s.selectedWorkspaceSlug,
         loading: true,
         error: null,
         streamingBotText: null,
@@ -97,7 +113,7 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
       }));
 
       try {
-        const list = await service.getForConversation(
+        const list = await messageService.getForConversation(
           conversationId,
           workspaceSlug
         );
@@ -105,17 +121,25 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
           (a, b) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
+
         setState((s) => ({
           ...s,
           items: list,
           loading: false,
           error: null,
+          selectedConversationId: conversationId,
+          selectedConversationTitle:
+            conversationTitle ?? s.selectedConversationTitle,
+          selectedWorkspaceSlug: workspaceSlug ?? s.selectedWorkspaceSlug,
         }));
+
+        // persistimos selección
+        persistSelection(
+          conversationId,
+          conversationTitle ?? null,
+          workspaceSlug ?? null
+        );
       } catch (e: any) {
-        // si falla, limpiamos la persistencia para no quedar en bucle
-        try {
-          localStorage.removeItem(PERSIST_KEY);
-        } catch {}
         setState((s) => ({
           ...s,
           items: [],
@@ -124,17 +148,14 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
         }));
       }
     },
-    [service]
+    [messageService, persistSelection]
   );
 
   const clear = useCallback(() => {
-    try {
-      localStorage.removeItem(PERSIST_KEY);
-    } catch {}
     setState({
       selectedConversationId: null,
-      selectedWorkspaceSlug: null,
       selectedConversationTitle: null,
+      selectedWorkspaceSlug: null,
 
       loading: false,
       error: null,
@@ -143,7 +164,8 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
       streamingBotText: null,
       streamingSuggestTicket: false,
     });
-  }, []);
+    persistSelection(null, null, null);
+  }, [persistSelection]);
 
   const appendLocal = useCallback((msg: Message) => {
     setState((s) => ({ ...s, items: [...s.items, msg] }));
@@ -161,13 +183,80 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
     }));
   }, []);
 
+  // ---- crea conversación si hace falta (al enviar sin selección) ----
+  const ensureConversationForInput = useCallback(async (): Promise<{
+    conversationId: string;
+    workspaceSlug: string;
+    conversationTitle: string;
+  }> => {
+    // si ya hay selección → ok
+    if (state.selectedConversationId && state.selectedWorkspaceSlug) {
+      return {
+        conversationId: state.selectedConversationId,
+        workspaceSlug: state.selectedWorkspaceSlug,
+        conversationTitle: state.selectedConversationTitle ?? "Conversación",
+      };
+    }
+
+    // 1) workspace preferido
+    let wsSlug =
+      state.selectedWorkspaceSlug || localStorage.getItem(LS.lastWs) || null;
+
+    if (!wsSlug) {
+      // 2) último workspace creado
+      const latest = await workspaceService.getLatestWorkspace();
+      wsSlug = latest?.slug ?? null;
+    }
+
+    if (!wsSlug) {
+      // No hay workspaces → que la UI abra modal de creación
+      const err: any = new Error("No hay workspaces disponibles");
+      err.code = "NO_WORKSPACE";
+      throw err;
+    }
+
+    // 3) crear conversación con nombre base
+    const roles = user?.roles ?? []; // para payload, si el backend los requiere
+    const created = await conversationService.create({
+      name: "Nueva conversación",
+      roles,
+      workspaceSlug: wsSlug,
+    });
+
+    // título con id para la UI (si luego quieres persistir el rename, añadimos PATCH)
+    const title = `Nueva conversación ${created._id}`;
+
+    // marcamos selección y guardamos en LS
+    setState((s) => ({
+      ...s,
+      selectedConversationId: created._id,
+      selectedConversationTitle: title,
+      selectedWorkspaceSlug: wsSlug,
+    }));
+    persistSelection(created._id, title, wsSlug);
+
+    return {
+      conversationId: created._id,
+      workspaceSlug: wsSlug,
+      conversationTitle: title,
+    };
+  }, [
+    state.selectedConversationId,
+    state.selectedWorkspaceSlug,
+    user?.roles,
+    workspaceService,
+    conversationService,
+    persistSelection,
+  ]);
+
+  // ---- enviar mensaje (crea conversación si no la hay) + streaming ----
   const sendMessage = useCallback(
     async (content: string, fileUrls?: string[]) => {
-      const cid = state.selectedConversationId;
-      const wslug = state.selectedWorkspaceSlug ?? undefined;
-      if (!cid) return;
+      // crea conversacion si hace falta
+      const { conversationId: cid, workspaceSlug: wslug } =
+        await ensureConversationForInput();
 
-      // 1) mensaje humano optimista
+      // mensaje humano optimista
       const tempId = `local-${Date.now()}`;
       const createdAt = new Date().toISOString();
       const optimistic: Message = {
@@ -175,15 +264,15 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
         conversationId: cid,
         content,
         userId: "me",
-        workspaceSlug: wslug ?? "",
+        workspaceSlug: wslug,
         type: "text",
         sender: "human",
         createdAt,
       };
       setState((s) => ({ ...s, items: [...s.items, optimistic] }));
 
-      // 2) dispara SSE
-      cancelRef.current = await service.sendWithStream(
+      // streaming
+      cancelRef.current = await messageService.sendWithStream(
         { conversationId: cid, content, workspaceSlug: wslug, fileUrls },
         {
           onHumanSavedId: (id) => {
@@ -204,19 +293,18 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
           onDone: () => {
             setState((s) => {
               const final = s.streamingBotText ?? "";
-              if (!final) {
+              if (!final)
                 return {
                   ...s,
                   streamingBotText: null,
                   streamingSuggestTicket: false,
                 };
-              }
               const botMsg: Message = {
                 _id: `bot-${Date.now()}`,
                 conversationId: cid,
                 content: final,
                 userId: "bot",
-                workspaceSlug: wslug ?? "",
+                workspaceSlug: wslug,
                 type: "text",
                 sender: "bot",
                 createdAt: new Date().toISOString(),
@@ -237,42 +325,15 @@ export const MessagesProvider: React.FC<React.PropsWithChildren> = ({
               ...s,
               streamingBotText: null,
               streamingSuggestTicket: false,
-              error: err?.message || "Error recibiendo la respuesta del bot",
+              error: err.message || "Error recibiendo la respuesta del bot",
             }));
             cancelRef.current = null;
           },
         }
       );
     },
-    [service, state.selectedConversationId, state.selectedWorkspaceSlug]
+    [ensureConversationForInput, messageService]
   );
-
-  // 🔄 Re-hidratar al montar: abrir la última conversación persistida
-  useEffect(() => {
-    if (hydratedRef.current) return;
-    hydratedRef.current = true;
-    try {
-      const raw = localStorage.getItem(PERSIST_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as {
-        id?: string;
-        slug?: string | null;
-        title?: string | null;
-      };
-      if (parsed?.id) {
-        void openConversation(
-          parsed.id,
-          parsed.slug ?? undefined,
-          parsed.title ?? undefined
-        );
-      }
-    } catch (e) {
-      // si hay JSON corrupto, limpiamos y seguimos
-      try {
-        localStorage.removeItem(PERSIST_KEY);
-      } catch {}
-    }
-  }, [openConversation]);
 
   const value: MessagesContextValue = {
     state,

@@ -1,3 +1,4 @@
+// src/application/services/WorkspaceService.ts
 import type { Workspace } from "@/domain/models/Workspace";
 import type {
   PageRequest,
@@ -6,6 +7,7 @@ import type {
 import { normalizePaginatedResponse } from "@/domain/models/Pagination";
 import { WorkspaceRepository } from "@/core/repositories";
 
+/** Devuelve true si existe intersección entre arrays de roles (al menos 1 coincidencia) */
 function rolesIntersect(
   userRoles: string[] | null | undefined,
   workspaceRoles: string[] | null | undefined

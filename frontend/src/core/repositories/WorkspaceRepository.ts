@@ -1,3 +1,4 @@
+// src/infrastructure/repositories/WorkspaceRepository.ts
 import type { Workspace } from "@/domain/models/Workspace";
 import type {
   PageRequest,
@@ -38,18 +39,15 @@ export class WorkspaceRepository {
     return res as Workspace;
   }
 
-  /**
-   * Pide "el último" workspace de backend (pageSize=1, sortBy=createdAt desc)
-   */
+  /** Último workspace creado (asumiendo que el backend soporta order por createdAt) */
   async getLatest(): Promise<Workspace | null> {
     const url = new URL(`${this.baseUrl}/workspaces`);
     url.searchParams.set("pageSize", "1");
     url.searchParams.set("pageNumber", "1");
     url.searchParams.set("sortBy", "createdAt");
     url.searchParams.set("sortDirection", "desc");
-
     const raw = await fetchWithAuth(url.toString(), { method: "GET" });
-    const data = raw as PaginatedResponse<Workspace>;
-    return data.list?.[0] ?? null;
+    const pr = raw as PaginatedResponse<Workspace>;
+    return pr.list?.[0] ?? null;
   }
 }

@@ -11,22 +11,47 @@ import {
 } from "./";
 import { truncateText } from "@/application/utils/text";
 import { useMessages } from "@/application/contexts/MessagesContext";
+
 interface SidebarListProps {
   chatmode: "mini" | "desktop";
 }
 
-const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
-  const ns = chatmode === "mini" ? "menu-mini" : "menu"; // ← prefijo dinámico
+const LS_EXPANDED = "caiak:wsExpanded";
 
-  // helpers de clase para no equivocarnos
+function readExpandedMap(): Record<string, boolean> {
+  try {
+    const raw = localStorage.getItem(LS_EXPANDED);
+    return raw ? (JSON.parse(raw) as Record<string, boolean>) : {};
+  } catch {
+    return {};
+  }
+}
+function writeExpandedMap(next: Record<string, boolean>) {
+  try {
+    localStorage.setItem(LS_EXPANDED, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+function setExpandedStored(slug: string, value: boolean) {
+  const map = readExpandedMap();
+  map[slug] = value;
+  writeExpandedMap(map);
+}
+
+const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
+  const ns = chatmode === "mini" ? "menu-mini" : "menu";
   const cls = (suffix = "") => (suffix ? `${ns}${suffix}` : ns);
 
   const { workspaces, loading, error } = useWorkspaces();
   const { stateByWorkspace, toggleWorkspace, refreshWorkspace } =
     useConversations();
   const { state: msgState, openConversation } = useMessages();
-  const prefetchedSlugsRef = useRef<Set<string>>(new Set());
 
+  const prefetchedSlugsRef = useRef<Set<string>>(new Set());
+  const appliedRestoreRef = useRef<Set<string>>(new Set()); // ← evita re-aplicar restore por slug
+
+  // Prefetch de conversaciones por workspace (tal como ya tenías)
   useEffect(() => {
     if (loading || error || workspaces.length === 0) return;
 
@@ -48,15 +73,42 @@ const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, error, workspaces, refreshWorkspace, stateByWorkspace]);
 
+  // ✅ Restaurar expand/collapse desde localStorage
+  useEffect(() => {
+    if (loading || error || workspaces.length === 0) return;
+
+    const stored = readExpandedMap();
+    for (const ws of workspaces) {
+      const want = stored[ws.slug];
+      if (typeof want !== "boolean") continue; // no hay preferencia guardada
+
+      // evita re-aplicar para el mismo slug
+      if (appliedRestoreRef.current.has(ws.slug)) continue;
+
+      const currExpanded = stateByWorkspace[ws.slug]?.expanded ?? false;
+      if (want !== currExpanded) {
+        appliedRestoreRef.current.add(ws.slug);
+        // Alinea el estado: si queremos expandir y ahora está colapsado (o viceversa)
+        void toggleWorkspace(ws.slug);
+      } else {
+        appliedRestoreRef.current.add(ws.slug);
+      }
+    }
+  }, [loading, error, workspaces, stateByWorkspace, toggleWorkspace]);
+
   const handleWorkspaceClick = useCallback(
     async (slug: string) => {
       const wsState = stateByWorkspace[slug];
+      const isExpanded = wsState?.expanded ?? false;
 
-      if (wsState?.expanded) {
+      // Si está expandido → colapsar
+      if (isExpanded) {
+        setExpandedStored(slug, false); // persistimos next state
         await toggleWorkspace(slug);
         return;
       }
 
+      // Si NO estaba expandido: asegurar datos y luego expandir
       const hasLoadedOnce = !!wsState;
       const hasItems = wsState?.items?.length > 0;
 
@@ -65,8 +117,12 @@ const SidebarList: React.FC<SidebarListProps> = ({ chatmode }) => {
         await refreshWorkspace(slug);
       }
 
+      // Decide si puede expandir
       const after = stateByWorkspace[slug];
       const canExpand = !!after && after.items && after.items.length > 0;
+
+      // Persistimos que el siguiente estado será expandido (aunque no expanda si no hay items)
+      setExpandedStored(slug, true);
 
       if (canExpand) {
         await toggleWorkspace(slug);
