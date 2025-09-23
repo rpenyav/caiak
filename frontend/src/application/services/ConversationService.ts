@@ -70,18 +70,26 @@ export class ConversationService {
     this.repo = repo ?? new ConversationRepository();
   }
 
+  /** Mantengo tu `create` para compatibilidad */
   async create(payload: CreateConversationPayload): Promise<Conversation> {
+    return this.repo.create(payload);
+  }
+
+  /** Alias opcional (por si en algún sitio lo llamas así) */
+  async createConversation(
+    payload: CreateConversationPayload
+  ): Promise<Conversation> {
     return this.repo.create(payload);
   }
 
   /**
    * Si se pasa workspaceSlug:
-   *  - llama a GET /conversations/workspace/:slug (sin paginado en backend)
+   *  - GET /conversations/workspace/:slug (sin paginado en backend)
    *  - filtra por roles del usuario
    *  - ordena y pagina en cliente según params
    *
    * Si NO hay workspaceSlug:
-   *  - usa GET /conversations con paginado/orden (si tu backend lo mantiene)
+   *  - GET /conversations con paginado/orden (si tu backend lo mantiene)
    */
   async getListForUser(
     params: PageRequest,
@@ -91,13 +99,11 @@ export class ConversationService {
     if (workspaceSlug) {
       const rawList = await this.repo.getByWorkspace(workspaceSlug);
 
-      // filtro por roles
       const filtered =
         userRoles && userRoles.length
           ? rawList.filter((c) => rolesIntersect(userRoles, c.roles))
           : rawList;
 
-      // orden + paginado en cliente
       const sorted = sortClient(
         filtered,
         params.sortBy,
@@ -119,11 +125,9 @@ export class ConversationService {
       };
     }
 
-    // Sin workspaceSlug → endpoint global (si lo mantienes con paginado server-side)
     const raw = await this.repo.getList(params);
     const normalized = normalizePaginatedResponse<Conversation>(raw);
 
-    // filtro por roles igualmente, por si acaso
     const list =
       userRoles && userRoles.length
         ? normalized.list.filter((c) => rolesIntersect(userRoles, c.roles))

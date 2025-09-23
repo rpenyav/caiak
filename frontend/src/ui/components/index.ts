@@ -63,3 +63,4 @@ export { default as MiniNavigation } from "./MiniNavigation";
 // export { default as IconCheck } from "./icons/IconCheck";
 export { default as MessageHuman } from "./MessageHuman";
 export { default as ChatInputArea } from "./ChatInputArea";
+export { default as WorkspaceCreateModal } from "./WorkspaceCreateModal";

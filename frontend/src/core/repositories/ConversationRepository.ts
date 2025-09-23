@@ -17,8 +17,11 @@ export class ConversationRepository {
 
   async create(payload: CreateConversationPayload): Promise<Conversation> {
     const url = `${this.baseUrl}/conversations`;
-    const body = JSON.stringify(payload);
-    const created = await fetchWithAuth(url, { method: "POST", body });
+    const created = await fetchWithAuth(url, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
     return created as Conversation;
   }
 
@@ -26,17 +29,18 @@ export class ConversationRepository {
   async getList(params: PageRequest): Promise<PaginatedResponse<Conversation>> {
     const url = new URL(`${this.baseUrl}/conversations`);
 
-    // Si tu backend ya NO acepta paginado global, puedes eliminar estas 4 líneas
-    if (params.pageSize != null)
+    if (params.pageSize != null) {
       url.searchParams.set(
         "pageSize",
         String(Math.max(1, Number(params.pageSize)))
       );
-    if (params.pageNumber != null)
+    }
+    if (params.pageNumber != null) {
       url.searchParams.set(
         "pageNumber",
         String(Math.max(1, Number(params.pageNumber)))
       );
+    }
     if (params.sortBy) url.searchParams.set("sortBy", params.sortBy);
     if (params.sortDirection)
       url.searchParams.set("sortDirection", params.sortDirection);
